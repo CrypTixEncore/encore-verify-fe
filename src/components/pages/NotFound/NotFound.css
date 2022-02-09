@@ -1,0 +1,30 @@
+.imageB {
+    width: 770px;
+    height: 90vh;
+  }
+  
+    h2 {
+      font-weight:bold;
+      color: #120237;
+    }
+  
+    .btn {
+      background-color: #120237;
+      color: white;
+      width: 50% !important;
+    }
+    .btn:hover {
+      background-color: #1d025c;
+      color: white;
+    }
+  
+  @media only screen and (max-width: 768px) {
+    .imageB {
+      width: 400px;
+      height: 300px;  
+    }
+
+    .btn {
+      width: 100% !important;
+    }
+  }

@@ -1,0 +1,132 @@
+.title-con h1 {
+  font-family: DM Sans;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 48px;
+  /* line-height: 10px; */
+  /* display: flex;
+    align-items: center;
+    text-align: center; */
+}
+
+.title-con p {
+  font-family: DM Sans;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 10px;
+  /* display: flex;
+    align-items: center;
+    text-align: center; */
+  color: #fc1258;
+}
+
+.leader-title {
+  font-family: DM Sans;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 30px;
+  line-height: 10px;
+  display: flex;
+  align-items: center;
+  color: #3f00ff;
+}
+.score {
+  font-family: DM Sans;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+}
+.username {
+  font-family: DM Sans;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.img-e {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.rank {
+  margin: auto;
+  font-family: DM Sans;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 50px;
+  /* display: flex; */
+  align-items: center;
+  text-align: center;
+  color: #3f00ff;
+}
+
+.leader-card {
+  display: block;
+  width: 100%;
+  height: 80px;
+  background: #ffffff;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.img {
+  width: 100%;
+  height: 350px;
+}
+
+.wrapper-e {
+  height: 350px;
+  /* padding: 0 40px; */
+  width: 100%;
+}
+
+.lead {
+  height: 350px;
+  /* padding: 0 40px; */
+  width: 100%;
+}
+
+.ct-btn {
+  background-color: #3f00ff;
+  color: white;
+  font-size: 16px;
+}
+
+.react-share__ShareButton {
+  background: none !important;
+}
+
+@media only screen and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 3) {
+  .wrapper-e {
+    overflow: scroll;
+  }
+  .leader-card {
+    width: 100%;
+  }
+  .leader-board {
+    width: 100%;
+  }
+  .congrats {
+    font-size: 10px;
+  }
+  .img {
+    width: 100%;
+    height: 230px;
+    margin: 20px 0;
+  }
+  .lead {
+    overflow: scroll;
+  }
+
+  .ct-btn {
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,98 @@
+.normal {
+  font-size: 15px;
+}
+.norma-t {
+  font-size: 16px;
+}
+
+.normal-b {
+  font-size: 17px;
+}
+
+.modal-cover {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+}
+
+/* .left-col {
+  padding: auto 0px;
+} */
+
+.img {
+  /* width: 100%;
+    height: 340px; */
+  border-radius: 5px;
+}
+
+.media-c {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+  filter: drop-shadow(3px 3px 3px #000);
+}
+
+.desc {
+  font-size: 20px;
+}
+
+.leader-board {
+  margin: 0 90px;
+}
+
+.lead {
+  height: 350px;
+  /* padding: 0 40px; */
+  width: 100%;
+}
+
+/* .bot-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+} */
+
+.bot-container .header-text-c,
+.bot-container .head3 {
+  line-height: 1.3;
+}
+
+.connect-btn {
+  width: 21rem;
+  margin: 0 auto;
+}
+
+.connect-block {
+  display: flex;
+  align-items: center;
+}
+
+@media only screen and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) {
+  .img {
+    height: auto;
+  }
+
+  .media-c {
+    margin-top: 10px !important;
+  }
+
+  .normal-h {
+    font-size: 24px;
+  }
+  .norma-t {
+    font-size: 19px;
+  }
+
+  .leader-board {
+    margin: 0 15px 0 0;
+  }
+
+  .lead {
+    overflow: scroll;
+  }
+}

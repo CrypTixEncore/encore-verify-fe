@@ -1,0 +1,72 @@
+.modal-cover {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+.modal-card {
+  background: #f8f4ec;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  justify-content: left;
+  width: 450px;
+  height: 270px;
+  padding: 0 23px;
+}
+
+.t-head {
+  font-family: DM Sans;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 22px;
+  line-height: 20px;
+}
+
+.b-head {
+  font-family: DM Sans;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.notify {
+  font-family: DM Sans;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 26px;
+
+  color: #ffffff;
+}
+
+.bg-modal{
+  text-align: center !important;
+  /* width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  top: 0; */
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.inputField {
+  width:100% !important;
+}
+
+@media only screen and (max-width: 768px) {
+  .home {
+    width: 20px;
+    height: 20px;
+  }
+
+  .modal-card {
+    width: 300px;
+    height: 250px;
+  }
+
+  .bg-modal {
+    padding-right: 40px!important;
+  }
+}
