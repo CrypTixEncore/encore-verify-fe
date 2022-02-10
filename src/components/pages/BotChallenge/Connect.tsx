@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import './BotChallenge.css';
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
-import { WalletModalProvider, WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { WalletModalProvider, WalletMultiButton, WalletConnectButton } from "@solana/wallet-adapter-react-ui";
 import * as anchor from "@project-serum/anchor";
 import {
     LedgerWalletAdapter,
@@ -28,10 +28,8 @@ export default function Connect() {
 
     useEffect(() => {
         const url = new URL(window.location.href)
-        console.log(url.searchParams.get('endpoint')!)
 
         setEndpoint(url.searchParams.get('endpoint')!)
-        //setEndpoint('https://' + 'api.mainnet-beta.solana.com')
 
         setGatekeeperNetwork(new anchor.web3.PublicKey(url.searchParams.get('gkNetwork')!))
 
@@ -57,15 +55,9 @@ export default function Connect() {
                 <ConnectionProvider endpoint={endpoint}>
                     <WalletProvider wallets={wallets}>
                         <WalletModalProvider>
-                            <div className="connect-block">
-                                <div className="connect-btn mt-1" style={{backgroundColor: 'blue'}}>
-                                    <WalletMultiButton disabled={isLoading} />
-                                </div>
-                            </div>
+                            <WalletConnectButton disabled={isLoading} className="connect-btn mt-3"/>
                             {gatekeeperNetwork && (
-                                <div className="connect-block">
-                                    <BotChallenge gatekeeperNetwork={gatekeeperNetwork} endpoint={endpoint}/>
-                                </div>
+                                <BotChallenge gatekeeperNetwork={gatekeeperNetwork} endpoint={endpoint}/>
                             )}
                         </WalletModalProvider>
                     </WalletProvider>

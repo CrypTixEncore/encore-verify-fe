@@ -10,7 +10,7 @@ import {useConnection, useWallet } from "@solana/wallet-adapter-react";
 import {Connection, PublicKey} from "@solana/web3.js";
 import * as anchor from '@project-serum/anchor'
 import EndBotChallenge from './EndBotChallenge';
-import {findGatewayToken} from '@identity.com/solana-gateway-ts'
+import {findGatewayToken,} from '@identity.com/solana-gateway-ts'
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
@@ -32,19 +32,12 @@ const BotChallenge = (props: {gatekeeperNetwork: anchor.web3.PublicKey, endpoint
     const startQuiz = async () => {
         setIsLoading(true)
 
-        const gatewayToken = await findGatewayToken(connection.connection, wallet.publicKey!, props.gatekeeperNetwork);
+        const questionsObj = await axios.get(`/bot-questions/create-bot-quiz`)
 
-        if (!gatewayToken) {
-            const questionsObj = await axios.get(`/bot-questions/create-bot-quiz`)
+        setQuestions(questionsObj.data)
 
-            setQuestions(questionsObj.data)
-
-            setPageState('TRIVIA')
-            setIsLoading(false)
-        } else {
-            setPageState('VALID')
-            setIsLoading(false)
-        }
+        setPageState('TRIVIA')
+        setIsLoading(false)
     }
 
     if (!wallet.connected) {
