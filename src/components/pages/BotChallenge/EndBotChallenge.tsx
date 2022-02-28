@@ -34,11 +34,11 @@ const EndBotChallenge = (props: {
             try {
                 const signedTx = await wallet!.signTransaction!(tx)
 
-                console.log(signedTx)
+                console.log('signed',signedTx)
 
                 const txSignature = await connection.connection.sendRawTransaction(signedTx.serialize())
 
-                console.log(txSignature)
+                console.log('sig',txSignature)
                 setVerified(true)
             } catch {
                 setWasError(true)
