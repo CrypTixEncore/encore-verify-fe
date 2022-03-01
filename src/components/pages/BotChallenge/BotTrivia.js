@@ -24,10 +24,6 @@ export const BotQuestion = ({ question, image, isLoading, renderCountdown, choos
 
     const indices = shuffleArray([1,2,3,4]);
 
-    useEffect(() => {
-        console.log(indices)
-    }, [])
-
     return (
         <div className="bot-question connect-triva">
             <div className="trival-block">
@@ -174,15 +170,7 @@ class BotTrivia extends Component {
                 bufferCard: false
             }))
 
-            console.log(JSON.stringify(this.state.answers))
             try {
-                console.log(this.props.wallet)
-                console.log(JSON.stringify({
-                    answers: this.state.answers,
-                    wallet: this.props.wallet.toBase58(),
-                    rpcUrl: this.props.endpoint,
-                    gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
-                }, null, 2))
                 const returnObj = await axios.post(
                     '/bot-questions/verify-human', {
                         answers: this.state.answers,
@@ -190,8 +178,6 @@ class BotTrivia extends Component {
                         rpcUrl: this.props.endpoint,
                         gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
                     });
-
-                console.log(returnObj)
 
                 this.setState({
                     finishQuiz: true,
@@ -247,8 +233,6 @@ class BotTrivia extends Component {
         })
 
         this.bufferTimerChild.current.start();
-
-        console.log(this.props.wallet)
     }
 
     renderCountdown = () => {

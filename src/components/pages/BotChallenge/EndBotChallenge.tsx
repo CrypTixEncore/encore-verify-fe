@@ -28,34 +28,18 @@ const EndBotChallenge = (props: {
             props.sendableTransaction!.signatures
         )
 
-        console.log(tx)
-
         if (wallet) {
             try {
                 const signedTx = await wallet!.signTransaction!(tx)
-
-                console.log('signed',signedTx)
-
                 const txSignature = await connection.connection.sendRawTransaction(signedTx.serialize())
 
-                console.log('sig',txSignature)
+                console.log(txSignature)
                 setVerified(true)
             } catch {
                 setWasError(true)
             }
-
-            //const returnObj = await connection.connection.sendRawTransaction(signedTx.serialize())
-            //const returnObj = await wallet.se(signedTx, connection.connection)
         }
     }
-
-    /*
-
-    useEffect(() => {
-        if (props.sendableTransaction) signAndSendGkTx();
-    }, [])
-
-     */
 
     return (
         <div>

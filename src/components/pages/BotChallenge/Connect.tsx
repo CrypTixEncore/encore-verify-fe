@@ -12,17 +12,14 @@ import {
 } from "@solana/wallet-adapter-wallets";
 
 import BotChallenge from './BotChallenge'
-import {useParams} from "react-router-dom";
 
-import '@solana/wallet-adapter-react-ui/styles.css';
+require('@solana/wallet-adapter-react-ui/styles.css');
 
 export default function Connect() {
     //const [warning, setWarning] = useState({ status: false, msg: '', type: '' });
     const [endpoint, setEndpoint]= useState<string>('')
     const [gatekeeperNetwork, setGatekeeperNetwork] = useState<anchor.web3.PublicKey>()
     const [isLoading, setIsLoading] = useState(true)
-
-    const params = useParams()
 
     //const network = WalletAdapterNetwork.get;
 
@@ -43,8 +40,6 @@ export default function Connect() {
             new SolflareWalletAdapter(),
             new TorusWalletAdapter(),
             new LedgerWalletAdapter(),
-            //new SolletWalletAdapter({ endpoint }),
-            //new SolletExtensionWalletAdapter({ endpoint }),
         ],
         []
     );
@@ -55,7 +50,7 @@ export default function Connect() {
                 <ConnectionProvider endpoint={endpoint}>
                     <WalletProvider wallets={wallets}>
                         <WalletModalProvider>
-                            <WalletConnectButton disabled={isLoading} className="connect-btn mt-3"/>
+                            <WalletMultiButton disabled={isLoading} className="connect-btn mt-3 text-center"/>
                             {gatekeeperNetwork && (
                                 <BotChallenge gatekeeperNetwork={gatekeeperNetwork} endpoint={endpoint}/>
                             )}

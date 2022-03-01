@@ -40,11 +40,6 @@ const BotChallenge = (props: {gatekeeperNetwork: anchor.web3.PublicKey, endpoint
         setIsLoading(false)
     }
 
-    useEffect(() => {
-        console.log(wallet.publicKey?.toBase58())
-    }, [])
-
-
     if (!wallet.connected) {
         return <div />
     }
