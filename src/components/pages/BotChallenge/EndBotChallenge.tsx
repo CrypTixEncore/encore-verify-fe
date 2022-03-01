@@ -34,6 +34,9 @@ const EndBotChallenge = (props: {
                 const txSignature = await connection.connection.sendRawTransaction(signedTx.serialize())
 
                 console.log(txSignature)
+
+                const channel = new BroadcastChannel('bot-challenge')
+                channel.postMessage('verified')
                 setVerified(true)
             } catch {
                 setWasError(true)
