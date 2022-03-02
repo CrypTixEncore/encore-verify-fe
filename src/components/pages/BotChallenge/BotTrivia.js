@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect} from 'react'
+import React, { Fragment, useEffect } from 'react'
 import '../../../App.css';
 import { Component } from 'react'
 import axios from '../../../settings/axios';
@@ -22,7 +22,7 @@ export const BotQuestion = ({ question, image, isLoading, renderCountdown, choos
         return array
     }
 
-    const indices = shuffleArray([1,2,3,4]);
+    const indices = shuffleArray([1, 2, 3, 4]);
 
     return (
         <div className="bot-question connect-triva">
@@ -47,8 +47,8 @@ export const BotQuestion = ({ question, image, isLoading, renderCountdown, choos
                     <div className="options">
                         {indices.map(index => (
                             <button className="btn btnChan text-left"
-                                    disabled={isLoading}
-                                    onClick={() => chooseAnswer(`option${index}`)}
+                                disabled={isLoading}
+                                onClick={() => chooseAnswer(`option${index}`)}
                             >
                                 {question[`option${index}`]}
                             </button>
@@ -170,21 +170,25 @@ class BotTrivia extends Component {
                 bufferCard: false
             }))
 
+            const payloadData = {
+                answers: this.state.answers,
+                wallet: this.props.wallet,
+                rpcUrl: this.props.endpoint,
+                gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
+            };
+            const encryptedData = crypto.encryption(payloadData, 'encore');
             try {
                 const returnObj = await axios.post(
-                    '/bot-questions/verify-human', {
-                        answers: this.state.answers,
-                        wallet: this.props.wallet.toBase58(),
-                        rpcUrl: this.props.endpoint,
-                        gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
-                    });
+                    '/bot-questions/verify-human', { payload: encryptedData });
+
+                const encrypted = crypto.decryption(returnObj.data, 'encore');
 
                 this.setState({
                     finishQuiz: true,
-                    returnObj: returnObj.data,
+                    returnObj: encrypted,
                     isLoading: false
                 })
-            } catch (e){
+            } catch (e) {
                 console.error(e)
 
                 await this.setState({
@@ -283,22 +287,22 @@ class BotTrivia extends Component {
                         {this.props.questions && this.props.questions.length !== 0 && !this.state.finishQuiz && (
                             <>
                                 <BotQuestion question={this.props.questions[this.state.currentQuestion]}
-                                             image={this.state.images[this.state.currentQuestion]}
-                                             isLoading={this.state.isLoading}
-                                             renderCountdown={this.renderCountdown}
-                                             chooseAnswer={this.chooseAnswer}
+                                    image={this.state.images[this.state.currentQuestion]}
+                                    isLoading={this.state.isLoading}
+                                    renderCountdown={this.renderCountdown}
+                                    chooseAnswer={this.chooseAnswer}
                                 />
                                 <PoweredBy />
                             </>
                         )}
-                        {!this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'PASSED' &&(
-                            <EndBotChallenge sendableTransaction={this.state.returnObj}/>
+                        {!this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'PASSED' && (
+                            <EndBotChallenge sendableTransaction={this.state.returnObj} />
                         )}
                     </div>
 
                 )}
-                {!this.state.bufferCard && !this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'FAILED' &&(
-                    <BotChallenge endpoint={this.props.endpoint} gatekeeperNetwork={this.props.gatekeeperNetwork} failed={true}/>
+                {!this.state.bufferCard && !this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'FAILED' && (
+                    <BotChallenge endpoint={this.props.endpoint} gatekeeperNetwork={this.props.gatekeeperNetwork} failed={true} />
                 )}
             </div>
         )
