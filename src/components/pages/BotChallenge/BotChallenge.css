@@ -62,10 +62,34 @@
   line-height: 1.3;
 }
 
-.connect-btn {
+/* .connect-btn {
   width: 21rem;
   margin: 0 auto;
+} */
+
+.wallet-adapter-button {
+  background: #3f00ff !important;
+  width: 21rem !important;
+  height: 100% !important;
+  border-radius: none !important;
+  border: none !important;
+  margin: 0 auto;
+  justify-content: center !important;
 }
+
+.wallet-adapter-button:focus {
+  outline: none !important;
+}
+
+.wallet-adapter-dropdown {
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* .over-m {
+  display: flex;
+  justify-content: center;
+} */
 
 .connect-block {
   display: flex;

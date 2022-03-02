@@ -11,7 +11,8 @@ import {
     TorusWalletAdapter
 } from "@solana/wallet-adapter-wallets";
 
-import BotChallenge from './BotChallenge'
+import BotChallenge from './BotChallenge';
+
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
@@ -45,7 +46,7 @@ export default function Connect() {
     );
 
     return (
-        <div className="container">
+        <div className="container over-m">
             {!isLoading && (
                 <ConnectionProvider endpoint={endpoint}>
                     <WalletProvider wallets={wallets}>
