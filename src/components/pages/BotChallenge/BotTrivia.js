@@ -8,7 +8,7 @@ import EndBotChallenge from './EndBotChallenge';
 import Countdown from "react-countdown";
 import './BotTrivia.css';
 import BotChallenge from './BotChallenge'
-
+import security from '../../../settings/security'
 
 export const BotQuestion = ({ question, image, isLoading, renderCountdown, chooseAnswer }) => {
     const shuffleArray = array => {
@@ -172,16 +172,30 @@ class BotTrivia extends Component {
 
             const payloadData = {
                 answers: this.state.answers,
-                wallet: this.props.wallet,
+                wallet: this.props.wallet.toBase58(),
                 rpcUrl: this.props.endpoint,
                 gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
             };
-            const encryptedData = crypto.encryption(payloadData, 'encore');
             try {
-                const returnObj = await axios.post(
-                    '/bot-questions/verify-human', { payload: encryptedData });
+                console.log(JSON.stringify(
+                    {
+                        answers: this.state.answers,
+                        wallet: this.props.wallet.toBase58(),
+                        rpcUrl: this.props.endpoint,
+                        gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
+                    }
+                , null, 2))
 
-                const encrypted = crypto.decryption(returnObj.data, 'encore');
+                console.log(JSON.stringify(
+                    {payload: security.encryption(payloadData, 'encore_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')}
+                    , null, 2))
+                const returnObj = await axios.post(
+                    '/bot-questions/verify-human', {
+                        payload: security.encryption(payloadData, 'encore_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')
+                    });
+
+
+                const encrypted = security.decryption(returnObj.data, 'encore_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');
 
                 this.setState({
                     finishQuiz: true,

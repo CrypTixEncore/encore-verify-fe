@@ -11,7 +11,7 @@ import {Connection, PublicKey} from "@solana/web3.js";
 import * as anchor from '@project-serum/anchor'
 import EndBotChallenge from './EndBotChallenge';
 import { findGatewayToken, } from '@identity.com/solana-gateway-ts';
-import crypto from '../../../settings/security';
+import security from '../../../settings/security';
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
@@ -35,7 +35,7 @@ const BotChallenge = (props: {gatekeeperNetwork: anchor.web3.PublicKey, endpoint
 
         const questionsObj = await axios.get(`/bot-questions/create-bot-quiz`)
 
-        const encryptedData = crypto.decryption(questionsObj.data, 'encore');
+        const encryptedData = security.decryption(questionsObj.data, 'encore_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');
 
         setQuestions(encryptedData);
 
