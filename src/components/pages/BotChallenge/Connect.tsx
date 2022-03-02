@@ -27,7 +27,7 @@ export default function Connect() {
     useEffect(() => {
         const url = new URL(window.location.href)
 
-        setEndpoint(url.searchParams.get('network')!)
+        setEndpoint(url.searchParams.get('endpoint')!)
 
         setGatekeeperNetwork(new anchor.web3.PublicKey(url.searchParams.get('gkNetwork')!))
 
