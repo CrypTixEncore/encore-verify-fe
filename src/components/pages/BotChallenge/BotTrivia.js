@@ -53,38 +53,6 @@ export const BotQuestion = ({ question, image, isLoading, renderCountdown, choos
                                 {question[`option${index}`]}
                             </button>
                         ))}
-                        {/*<div>
-                            <button className="btn btnChan text-left"
-                                disabled={isLoading}
-                                onClick={() => chooseAnswer("option1")}
-                            >
-                                {question.option1}
-                            </button>
-                        </div>
-                        <div>
-                            <button className="btn btnChan  text-left"
-                                disabled={isLoading}
-                                onClick={() => chooseAnswer("option2")}
-                            >
-                                {question.option2}
-                            </button>
-                        </div>
-                        <div>
-                            <button className="btn btnChan text-left"
-                                disabled={isLoading}
-                                onClick={() => chooseAnswer("option3")}
-                            >
-                                {question.option3}
-                            </button>
-                        </div>
-                        <div>
-                            <button className="btn btnChan text-left"
-                                disabled={isLoading}
-                                onClick={() => chooseAnswer("option4")}
-                            >
-                                {question.option4}
-                            </button>
-                        </div>*/}
                     </div>
                 </div>
             </div>
@@ -177,29 +145,16 @@ class BotTrivia extends Component {
                 gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
             };
             try {
-                console.log(JSON.stringify(
-                    {
-                        answers: this.state.answers,
-                        wallet: this.props.wallet.toBase58(),
-                        rpcUrl: this.props.endpoint,
-                        gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
-                    }
-                , null, 2))
-
-                console.log(JSON.stringify(
-                    {payload: security.encryption(payloadData, 'encore_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')}
-                    , null, 2))
                 const returnObj = await axios.post(
                     '/bot-questions/verify-human', {
                         payload: security.encryption(payloadData, 'encore_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')
                     });
 
-
-                const encrypted = security.decryption(returnObj.data, 'encore_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');
+                const decrypted = security.decryption(returnObj.data, 'encore_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');
 
                 this.setState({
                     finishQuiz: true,
-                    returnObj: encrypted,
+                    returnObj: decrypted,
                     isLoading: false
                 })
             } catch (e) {
