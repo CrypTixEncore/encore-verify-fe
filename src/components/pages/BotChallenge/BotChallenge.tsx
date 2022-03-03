@@ -16,7 +16,12 @@ import security from '../../../settings/security';
 require('@solana/wallet-adapter-react-ui/styles.css');
 
 // @ts-ignore
-const BotChallenge = (props: {gatekeeperNetwork: anchor.web3.PublicKey, endpoint: string, failed?: boolean}) => {
+const BotChallenge = (props: {
+    gatekeeperNetwork: anchor.web3.PublicKey,
+    endpoint: string,
+    failed?: boolean,
+    demo?: boolean
+}) => {
     const wallet = useWallet()
     const connection = useConnection();
 
@@ -33,7 +38,12 @@ const BotChallenge = (props: {gatekeeperNetwork: anchor.web3.PublicKey, endpoint
     const startQuiz = async () => {
         setIsLoading(true)
 
-        const questionsObj = await axios.get(`/bot-questions/create-bot-quiz`)
+        let questionsObj;
+        if (props.demo) {
+            questionsObj = await axios.get(`/bot-questions/demo-quiz`)
+        } else {
+            questionsObj = await axios.get(`/bot-questions/create-bot-quiz`)
+        }
 
         const encryptedData = security.decryption(questionsObj.data, 'encore_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');
 
