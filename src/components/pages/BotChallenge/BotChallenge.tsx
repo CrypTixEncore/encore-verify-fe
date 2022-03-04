@@ -12,11 +12,16 @@ import * as anchor from '@project-serum/anchor'
 import EndBotChallenge from './EndBotChallenge';
 import { findGatewayToken, } from '@identity.com/solana-gateway-ts';
 import crypto from '../../../settings/security';
+import config from '../../../config';
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
 // @ts-ignore
 const BotChallenge = (props: {gatekeeperNetwork: anchor.web3.PublicKey, endpoint: string, failed?: boolean}) => {
+    useEffect(() => {
+        console.log(config.encryptionSecret);
+    }, [])
+
     const wallet = useWallet()
     const connection = useConnection();
 
