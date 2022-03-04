@@ -8,7 +8,8 @@ import EndBotChallenge from './EndBotChallenge';
 import Countdown from "react-countdown";
 import './BotTrivia.css';
 import BotChallenge from './BotChallenge'
-import security from '../../../settings/security'
+import security from '../../../settings/security';
+import config from '../../../config';
 
 export const BotQuestion = ({ question, image, isLoading, renderCountdown, chooseAnswer }) => {
     const shuffleArray = array => {
@@ -147,10 +148,10 @@ class BotTrivia extends Component {
             try {
                 const returnObj = await axios.post(
                     '/bot-questions/verify-human', {
-                        payload: security.encryption(payloadData, 'encore_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')
+                        payload: security.encryption(payloadData, config.encryptionSecret)
                     });
 
-                const decrypted = security.decryption(returnObj.data, 'encore_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');
+                const decrypted = security.decryption(returnObj.data, config.encryptionSecret);
 
                 this.setState({
                     finishQuiz: true,

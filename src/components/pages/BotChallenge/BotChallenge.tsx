@@ -51,7 +51,7 @@ const BotChallenge = (props: {
             questionsObj = await axios.get(`/bot-questions/create-bot-quiz`)
         }
 
-        const encryptedData = security.decryption(questionsObj.data, 'encore_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');
+        const encryptedData = security.decryption(questionsObj.data, config.encryptionSecret);
 
         setQuestions(encryptedData);
 

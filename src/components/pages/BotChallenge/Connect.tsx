@@ -3,7 +3,6 @@ import './BotChallenge.css';
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { WalletModalProvider, WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import * as anchor from "@project-serum/anchor";
-import config from '../../../config';
 import {
     LedgerWalletAdapter,
     PhantomWalletAdapter,
@@ -25,7 +24,6 @@ export default function Connect() {
     const [demo, setDemo] = useState<boolean>(false)
 
     useEffect(() => {
-        console.log(config.encryptionSecret);
 
         const url = new URL(window.location.href)
 
@@ -39,7 +37,7 @@ export default function Connect() {
         setIsLoading(false)
     }, []);
 
-
+    console.log(endpoint);
     const wallets = useMemo(() => [
             new PhantomWalletAdapter(),
             new SlopeWalletAdapter(),
