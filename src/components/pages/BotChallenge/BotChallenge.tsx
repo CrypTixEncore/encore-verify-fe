@@ -24,9 +24,9 @@ const BotChallenge = (props: {
     demo?: boolean
 }) => {
 
-    useEffect(() => {
-        console.log(config.encryptionSecret);
-    }, []);
+    // useEffect(() => {
+    //     console.log(config.encryptionSecret);
+    // }, []);
     
     const wallet = useWallet()
     const connection = useConnection();
