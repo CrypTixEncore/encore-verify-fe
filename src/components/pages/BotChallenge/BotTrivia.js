@@ -8,7 +8,7 @@ import EndBotChallenge from './EndBotChallenge';
 import Countdown from "react-countdown";
 import './BotTrivia.css';
 import BotChallenge from './BotChallenge'
-
+import security from '../../../settings/security'
 
 export const BotQuestion = ({ question, image, isLoading, renderCountdown, chooseAnswer }) => {
     const shuffleArray = array => {
@@ -53,38 +53,6 @@ export const BotQuestion = ({ question, image, isLoading, renderCountdown, choos
                                 {question[`option${index}`]}
                             </button>
                         ))}
-                        {/*<div>
-                            <button className="btn btnChan text-left"
-                                disabled={isLoading}
-                                onClick={() => chooseAnswer("option1")}
-                            >
-                                {question.option1}
-                            </button>
-                        </div>
-                        <div>
-                            <button className="btn btnChan  text-left"
-                                disabled={isLoading}
-                                onClick={() => chooseAnswer("option2")}
-                            >
-                                {question.option2}
-                            </button>
-                        </div>
-                        <div>
-                            <button className="btn btnChan text-left"
-                                disabled={isLoading}
-                                onClick={() => chooseAnswer("option3")}
-                            >
-                                {question.option3}
-                            </button>
-                        </div>
-                        <div>
-                            <button className="btn btnChan text-left"
-                                disabled={isLoading}
-                                onClick={() => chooseAnswer("option4")}
-                            >
-                                {question.option4}
-                            </button>
-                        </div>*/}
                     </div>
                 </div>
             </div>
@@ -172,20 +140,21 @@ class BotTrivia extends Component {
 
             const payloadData = {
                 answers: this.state.answers,
-                wallet: this.props.wallet,
+                wallet: this.props.wallet.toBase58(),
                 rpcUrl: this.props.endpoint,
                 gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
             };
-            const encryptedData = crypto.encryption(payloadData, 'encore');
             try {
                 const returnObj = await axios.post(
-                    '/bot-questions/verify-human', { payload: encryptedData });
+                    '/bot-questions/verify-human', {
+                        payload: security.encryption(payloadData, 'encore_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')
+                    });
 
-                const encrypted = crypto.decryption(returnObj.data, 'encore');
+                const decrypted = security.decryption(returnObj.data, 'encore_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');
 
                 this.setState({
                     finishQuiz: true,
-                    returnObj: encrypted,
+                    returnObj: decrypted,
                     isLoading: false
                 })
             } catch (e) {

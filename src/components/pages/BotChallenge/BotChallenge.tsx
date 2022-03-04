@@ -11,17 +11,23 @@ import {Connection, PublicKey} from "@solana/web3.js";
 import * as anchor from '@project-serum/anchor'
 import EndBotChallenge from './EndBotChallenge';
 import { findGatewayToken, } from '@identity.com/solana-gateway-ts';
-import crypto from '../../../settings/security';
+import security from '../../../settings/security';
 import config from '../../../config';
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
 // @ts-ignore
-const BotChallenge = (props: {gatekeeperNetwork: anchor.web3.PublicKey, endpoint: string, failed?: boolean}) => {
+const BotChallenge = (props: {
+    gatekeeperNetwork: anchor.web3.PublicKey,
+    endpoint: string,
+    failed?: boolean,
+    demo?: boolean
+}) => {
+
     useEffect(() => {
         console.log(config.encryptionSecret);
-    }, [])
-
+    }, []);
+    
     const wallet = useWallet()
     const connection = useConnection();
 
@@ -38,9 +44,14 @@ const BotChallenge = (props: {gatekeeperNetwork: anchor.web3.PublicKey, endpoint
     const startQuiz = async () => {
         setIsLoading(true)
 
-        const questionsObj = await axios.get(`/bot-questions/create-bot-quiz`)
+        let questionsObj;
+        if (props.demo) {
+            questionsObj = await axios.get(`/bot-questions/demo-quiz`)
+        } else {
+            questionsObj = await axios.get(`/bot-questions/create-bot-quiz`)
+        }
 
-        const encryptedData = crypto.decryption(questionsObj.data, 'encore');
+        const encryptedData = security.decryption(questionsObj.data, 'encore_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');
 
         setQuestions(encryptedData);
 
