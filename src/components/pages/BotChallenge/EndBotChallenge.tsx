@@ -1,7 +1,9 @@
-import React, {useEffect, useState} from 'react';
+// eslint-disable-next-line
+import React, { useEffect, useState } from 'react';
 import PoweredBy from '../../PoweredBy';
 import './EndBotChallenge.css';
-import {useConnection, useWallet} from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+// eslint-disable-next-line
 import {Connection, Message, Transaction} from "@solana/web3.js";
 // @ts-ignore
 import {base58_to_binary} from '@relocke/base58';

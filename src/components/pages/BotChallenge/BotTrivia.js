@@ -1,4 +1,5 @@
-import React, { Fragment, useEffect } from 'react'
+// eslint-disable-next-line
+import React, { Fragment, useEffect } from 'react';
 import '../../../App.css';
 import { Component } from 'react'
 import axios from '../../../settings/axios';
@@ -41,7 +42,7 @@ export const BotQuestion = ({ question, image, isLoading, renderCountdown, choos
                     {image && (
                         <div>
                             <div className="media-c">
-                                <img src={image.src} alt="question" className="drop-shadow img" />
+                                <img src={image.src} alt="question" className="drop-shadow img-b" />
                             </div>
                         </div>
                     )}

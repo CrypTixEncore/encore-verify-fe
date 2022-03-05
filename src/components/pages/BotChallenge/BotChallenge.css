@@ -19,10 +19,10 @@
   padding: auto 0px;
 } */
 
-.img {
-  /* width: 100%;
-    height: 340px; */
-  border-radius: 5px;
+.img-b {
+  max-width:100%;
+  object-fit: scale-down;
+  /* border-radius: 5px; */
 }
 
 .media-c {

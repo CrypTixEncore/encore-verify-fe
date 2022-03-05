@@ -2,7 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './NotFound.css';
 
+
 const NotFound = () => {
+    const lmgLink = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/4424790/Mirror.png';
     return (
         <div >
             <div className="row mt-5">
@@ -14,7 +16,7 @@ const NotFound = () => {
                     <Link to="/home"><button className='btn align-self-center'><i class="fas fa-arrow-left"></i>  BACK TO HOME</button></Link>
                 </div>
                 <div className="col-md-7">
-                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/4424790/Mirror.png" className="imageB" alt="404 Image" />
+                    <img src={lmgLink} className="imageB" alt="404" />
                 </div>
                 
             </div>

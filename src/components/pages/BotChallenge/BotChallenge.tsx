@@ -1,16 +1,17 @@
+// eslint-disable-next-line
 import React, { Fragment, useEffect, useState, } from 'react';
 import '../../../App.css';
 import axios from '../../../settings/axios';
-import Error from '../../alert modals/Error';
+// import Error from '../../alert modals/Error';
 import BotTrivia from "./BotTrivia";
 import Loader from '../Loader/Loader';
 import PoweredBy from '../../PoweredBy';
 import './BotChallenge.css';
-import {useConnection, useWallet } from "@solana/wallet-adapter-react";
-import {Connection, PublicKey} from "@solana/web3.js";
+import { useWallet } from "@solana/wallet-adapter-react";
+// import {Connection, PublicKey} from "@solana/web3.js";
 import * as anchor from '@project-serum/anchor'
 import EndBotChallenge from './EndBotChallenge';
-import { findGatewayToken, } from '@identity.com/solana-gateway-ts';
+// import { findGatewayToken, } from '@identity.com/solana-gateway-ts';
 import security from '../../../settings/security';
 import config from '../../../config';
 
@@ -29,17 +30,18 @@ const BotChallenge = (props: {
     // }, []);
     
     const wallet = useWallet()
-    const connection = useConnection();
+    // const connection = useConnection();
 
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
+    // eslint-disable-next-line
     const [warning, setWarning] = useState({ status: false, msg: '', type: '' });
     const [pageState, setPageState] = useState('LANDING')
     const [questions, setQuestions] = useState(null);
-    const [showSignInModal, setShowSignInModal] = useState(false);
+    // const [showSignInModal, setShowSignInModal] = useState(false);
 
-    const closeModal = (setShow: { (value: React.SetStateAction<boolean>): void; (arg0: boolean): void; }) => {
-        setShow(false)
-    }
+    // const closeModal = (setShow: { (value: React.SetStateAction<boolean>): void; (arg0: boolean): void; }) => {
+    //     setShow(false)
+    // }
 
     const startQuiz = async () => {
         setIsLoading(true)
