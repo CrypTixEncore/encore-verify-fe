@@ -12,6 +12,7 @@ import * as anchor from '@project-serum/anchor'
 import EndBotChallenge from './EndBotChallenge';
 import { findGatewayToken, } from '@identity.com/solana-gateway-ts';
 import security from '../../../settings/security';
+import config from '../../../config';
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
@@ -45,7 +46,8 @@ const BotChallenge = (props: {
             questionsObj = await axios.get(`/bot-questions/create-bot-quiz`)
         }
 
-        const encryptedData = security.decryption(questionsObj.data, 'encore_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');
+        const encryptedData = security.decryption(questionsObj.data, config.encryptionSecret);
+
 
         setQuestions(encryptedData);
 

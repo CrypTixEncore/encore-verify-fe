@@ -12,6 +12,7 @@ import {
 } from "@solana/wallet-adapter-wallets";
 
 import BotChallenge from './BotChallenge';
+import config from '../../../config';
 
 
 require('@solana/wallet-adapter-react-ui/styles.css');
@@ -33,7 +34,8 @@ export default function Connect() {
         setDemo(url.searchParams.get('demo')! === 'true')
 
         setIsLoading(false)
-    }, [])
+    }, []);
+
 
     const wallets = useMemo(() => [
             new PhantomWalletAdapter(),
