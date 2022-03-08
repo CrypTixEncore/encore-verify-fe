@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react'
+import React from 'react'
 import '../../../App.css';
 import { Component } from 'react'
 import axios from '../../../settings/axios';
