@@ -12,7 +12,6 @@ import security from '../../../settings/security';
 import config from '../../../config';
 import UseGtagEvent from '../../hooks/useGtagEvent';
 
-
 export const BotQuestion = ({ question, image, isLoading, renderCountdown, chooseAnswer }) => {
     const shuffleArray = array => {
         for (let i = array.length - 1; i > 0; i--) {
