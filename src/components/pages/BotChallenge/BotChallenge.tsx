@@ -13,6 +13,7 @@ import EndBotChallenge from './EndBotChallenge';
 import { findGatewayToken, } from '@identity.com/solana-gateway-ts';
 import security from '../../../settings/security';
 import config from '../../../config';
+import UseGtagEvent from '../../hooks/useGtagEvent';
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
@@ -27,7 +28,7 @@ const BotChallenge = (props: {
     // useEffect(() => {
     //     console.log(config.encryptionSecret);
     // }, []);
-    
+
     const wallet = useWallet()
     const connection = useConnection();
 
@@ -53,10 +54,12 @@ const BotChallenge = (props: {
 
         const encryptedData = security.decryption(questionsObj.data, config.encryptionSecret);
 
+
         setQuestions(encryptedData);
 
-        setPageState('TRIVIA')
-        setIsLoading(false)
+        setPageState('TRIVIA');
+        setIsLoading(false);
+        UseGtagEvent('quiz_started', 'Quiz Started');
     }
 
     if (!wallet.connected) {
@@ -89,7 +92,7 @@ const BotChallenge = (props: {
 
                                             <button className="btn-small btn-primary mt-4"
                                                     disabled={warning.status}
-                                                    onClick={startQuiz}
+                                                onClick={startQuiz}
                                             >
                                                 VERIFY
                                             </button>
