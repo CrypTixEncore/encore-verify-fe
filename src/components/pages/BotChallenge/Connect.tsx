@@ -25,7 +25,8 @@ export default function Connect() {
     const [demo, setDemo] = useState<boolean>(false)
 
     useEffect(() => {
-        const url = new URL(window.location.href)
+        const url = new URL(window.location.href);
+        
 
         setEndpoint(url.searchParams.get('endpoint')!)
 

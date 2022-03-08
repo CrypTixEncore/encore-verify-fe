@@ -10,6 +10,8 @@ import './BotTrivia.css';
 import BotChallenge from './BotChallenge'
 import security from '../../../settings/security';
 import config from '../../../config';
+import UseGtagEvent from '../../hooks/useGtagEvent';
+
 
 export const BotQuestion = ({ question, image, isLoading, renderCountdown, chooseAnswer }) => {
     const shuffleArray = array => {
@@ -157,9 +159,13 @@ class BotTrivia extends Component {
                     finishQuiz: true,
                     returnObj: decrypted,
                     isLoading: false
-                })
+                });
+                
+                UseGtagEvent('quiz_successful', 'Quiz Successful');
+
             } catch (e) {
                 console.error(e)
+                UseGtagEvent('quiz_failed', 'Quiz Failed');
 
                 await this.setState({
                     quizStatus: 'FAILED'

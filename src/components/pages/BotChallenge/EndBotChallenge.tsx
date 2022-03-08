@@ -4,7 +4,8 @@ import './EndBotChallenge.css';
 import {useConnection, useWallet} from "@solana/wallet-adapter-react";
 import {Connection, Message, Transaction} from "@solana/web3.js";
 // @ts-ignore
-import {base58_to_binary} from '@relocke/base58';
+import { base58_to_binary } from '@relocke/base58';
+import UseGtagEvent from '../../hooks/useGtagEvent';
 
 const EndBotChallenge = (props: {
     sendableTransaction: ({ message: string; signatures: (string)[]; } | null), valid?: boolean}) => {
@@ -35,9 +36,11 @@ const EndBotChallenge = (props: {
 
                 console.log(txSignature)
 
-                setVerified(true)
+                setVerified(true);
+                UseGtagEvent('transaction_successful', 'Transaction Successful');
             } catch {
-                setWasError(true)
+                setWasError(true);
+                UseGtagEvent('transaction_failed', 'Transaction Failed');
             }
         }
     }
