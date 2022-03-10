@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, {Fragment, useEffect} from 'react'
 import '../../../App.css';
 import { Component } from 'react'
 import axios from '../../../settings/axios';
@@ -9,7 +9,25 @@ import Countdown from "react-countdown";
 import './BotTrivia.css';
 import BotChallenge from './BotChallenge'
 
+
 export const BotQuestion = ({ question, image, isLoading, renderCountdown, chooseAnswer }) => {
+    const shuffleArray = array => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+
+        return array
+    }
+
+    const indices = shuffleArray([1,2,3,4]);
+
+    useEffect(() => {
+        console.log(indices)
+    }, [])
+
     return (
         <div className="bot-question connect-triva">
             <div className="trival-block">
@@ -31,7 +49,15 @@ export const BotQuestion = ({ question, image, isLoading, renderCountdown, choos
                         </div>
                     )}
                     <div className="options">
-                        <div>
+                        {indices.map(index => (
+                            <button className="btn btnChan text-left"
+                                    disabled={isLoading}
+                                    onClick={() => chooseAnswer(`option${index}`)}
+                            >
+                                {question[`option${index}`]}
+                            </button>
+                        ))}
+                        {/*<div>
                             <button className="btn btnChan text-left"
                                 disabled={isLoading}
                                 onClick={() => chooseAnswer("option1")}
@@ -62,7 +88,7 @@ export const BotQuestion = ({ question, image, isLoading, renderCountdown, choos
                             >
                                 {question.option4}
                             </button>
-                        </div>
+                        </div>*/}
                     </div>
                 </div>
             </div>
@@ -150,10 +176,17 @@ class BotTrivia extends Component {
 
             console.log(JSON.stringify(this.state.answers))
             try {
+                console.log(this.props.wallet)
+                console.log(JSON.stringify({
+                    answers: this.state.answers,
+                    wallet: this.props.wallet.toBase58(),
+                    rpcUrl: this.props.endpoint,
+                    gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
+                }, null, 2))
                 const returnObj = await axios.post(
                     '/bot-questions/verify-human', {
                         answers: this.state.answers,
-                        wallet: this.props.wallet,
+                        wallet: this.props.wallet.toBase58(),
                         rpcUrl: this.props.endpoint,
                         gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
                     });
@@ -165,7 +198,9 @@ class BotTrivia extends Component {
                     returnObj: returnObj.data,
                     isLoading: false
                 })
-            } catch {
+            } catch (e){
+                console.error(e)
+
                 await this.setState({
                     quizStatus: 'FAILED'
                 })
@@ -212,6 +247,8 @@ class BotTrivia extends Component {
         })
 
         this.bufferTimerChild.current.start();
+
+        console.log(this.props.wallet)
     }
 
     renderCountdown = () => {
@@ -223,9 +260,11 @@ class BotTrivia extends Component {
                 ref={this.quizTimerChild}
                 controlled={false}
                 autoStart={true}
-                renderer={props => <div className="head5 text-left timer">
-                    <span className="blue-text">{this.state.currentQuestion + 1} of {this.props.questions.length}</span> with <span className="blue-text">{(props.total / 1000)} seconds</span> remaining
-                </div>}
+                renderer={props =>
+                    <div className="head5 text-left timer">
+                        <span className="blue-text">{this.state.currentQuestion + 1} of {this.props.questions.length}</span> with <span className="blue-text">{(props.total / 1000)} seconds</span> remaining
+                    </div>
+                }
                 onPause={async (props) => this.updateAnswer((props.total / 1000).toFixed(2))}
                 onComplete={async () => this.updateAnswer(0)}
             />
@@ -247,9 +286,9 @@ class BotTrivia extends Component {
                                 await this.setState({ bufferCard: false, isLoading: false });
                             }}
                             renderer={props =>
-                                <Fragment>
+                                <>
                                     <div className="head3 bold-text">{this.state.currentQuestion === 0 ? 'The challenge starts in' : 'Next question in'}: <div className="blue-text my-5 bold-text countdown-text">{props.total / 1000}</div></div>
-                                </Fragment>
+                                </>
                             }
                         />
                         <PoweredBy />
@@ -268,11 +307,6 @@ class BotTrivia extends Component {
                                 <PoweredBy />
                             </>
                         )}
-                        {/*(!this.props.questions || this.props.questions.length === 0) && this.state.loaded && (
-                            <div className="margin-auto width-50">
-                                <h3>Quiz wrapped up!</h3>
-                            </div>
-                        )*/}
                         {!this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'PASSED' &&(
                             <EndBotChallenge sendableTransaction={this.state.returnObj}/>
                         )}
