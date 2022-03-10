@@ -144,6 +144,7 @@ class BotTrivia extends Component {
                 answers: this.state.answers,
                 wallet: this.props.wallet.toBase58(),
                 rpcUrl: this.props.endpoint,
+                token: this.props.token,
                 gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
             };
             try {

@@ -26,6 +26,7 @@ const BotChallenge = (props: {
     const [warning, setWarning] = useState({ status: false, msg: '', type: '' });
     const [pageState, setPageState] = useState('LANDING')
     const [questions, setQuestions] = useState(null);
+    const [token, setToken] = useState("");
     const [showSignInModal, setShowSignInModal] = useState(false);
 
     const closeModal = (setShow: { (value: React.SetStateAction<boolean>): void; (arg0: boolean): void; }) => {
@@ -44,7 +45,8 @@ const BotChallenge = (props: {
 
         const encryptedData = questionsObj.data;
 
-        setQuestions(encryptedData);
+        setQuestions(encryptedData.questions);
+        setToken(encryptedData.token)
 
         setPageState('TRIVIA');
         setIsLoading(false);
@@ -99,6 +101,7 @@ const BotChallenge = (props: {
                            wallet={wallet.publicKey!}
                            endpoint={props.endpoint}
                            gatekeeperNetwork={props.gatekeeperNetwork}
+                           token={token}
                 />
             )}
             {pageState === 'VALID' && (
