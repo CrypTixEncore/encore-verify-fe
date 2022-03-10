@@ -148,11 +148,9 @@ class BotTrivia extends Component {
             };
             try {
                 const returnObj = await axios.post(
-                    '/bot-questions/verify-human', {
-                        payload: security.encryption(payloadData, config.encryptionSecret)
-                    });
+                    '/bot-questions/verify-human', payloadData);
 
-                const decrypted = security.decryption(returnObj.data, config.encryptionSecret);
+                const decrypted = returnObj.data;
 
                 this.setState({
                     finishQuiz: true,
