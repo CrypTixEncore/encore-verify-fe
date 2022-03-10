@@ -51,11 +51,6 @@ const BotChallenge = (props: {
         UseGtagEvent('quiz_started', 'Quiz Started');
     }
 
-    useEffect(() => {
-        console.log(wallet.publicKey?.toBase58())
-    }, [])
-
-
     if (!wallet.connected) {
         return <div />
     }
