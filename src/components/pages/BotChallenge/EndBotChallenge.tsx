@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import PoweredBy from '../../PoweredBy';
 import './EndBotChallenge.css';
 import {useConnection, useWallet} from "@solana/wallet-adapter-react";
-import {Connection, Message, Transaction} from "@solana/web3.js";
-// @ts-ignore
-import {base58_to_binary} from '@relocke/base58';
+import {Message, Transaction} from "@solana/web3.js";
+import bs58 from "bs58";
+import UseGtagEvent from '../../hooks/useGtagEvent';
 
 const EndBotChallenge = (props: {
     sendableTransaction: ({ message: string; signatures: (string)[]; } | null), valid?: boolean}) => {
@@ -16,7 +16,7 @@ const EndBotChallenge = (props: {
     const [wasError, setWasError] = useState(false)
 
     const fromSerialized = (
-        message: Buffer,
+        message: Uint8Array,
         signatures: (string)[]
     ): Transaction => {
         return Transaction.populate(Message.from(message), signatures)
@@ -24,38 +24,25 @@ const EndBotChallenge = (props: {
 
     const signAndSendGkTx = async () => {
         const tx = fromSerialized(
-            base58_to_binary(props.sendableTransaction!.message),
+            bs58.decode(props.sendableTransaction!.message),
             props.sendableTransaction!.signatures
         )
-
-        console.log(tx)
 
         if (wallet) {
             try {
                 const signedTx = await wallet!.signTransaction!(tx)
+                const txSignature = await connection.connection.sendRawTransaction(signedTx.serialize())
 
-                console.log('signed',signedTx)
+                console.log(txSignature)
 
-                const txSignature = await connection.connection.sendRawTransaction(signedTx.serialize(), {skipPreflight: true})
-
-                console.log('sig',txSignature)
-                setVerified(true)
+                setVerified(true);
+                UseGtagEvent('transaction_successful', 'Transaction Successful');
             } catch {
-                setWasError(true)
+                setWasError(true);
+                UseGtagEvent('transaction_failed', 'Transaction Failed');
             }
-
-            //const returnObj = await connection.connection.sendRawTransaction(signedTx.serialize())
-            //const returnObj = await wallet.se(signedTx, connection.connection)
         }
     }
-
-    /*
-
-    useEffect(() => {
-        if (props.sendableTransaction) signAndSendGkTx();
-    }, [])
-
-     */
 
     return (
         <div>

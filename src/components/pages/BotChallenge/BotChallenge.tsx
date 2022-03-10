@@ -1,23 +1,26 @@
-import React, { Fragment, useEffect, useState, } from 'react';
+import React, { useState, } from 'react';
 import '../../../App.css';
 import axios from '../../../settings/axios';
-import Error from '../../alert modals/Error';
 import BotTrivia from "./BotTrivia";
 import Loader from '../Loader/Loader';
 import PoweredBy from '../../PoweredBy';
 import './BotChallenge.css';
 import {useConnection, useWallet } from "@solana/wallet-adapter-react";
-import {Connection, PublicKey} from "@solana/web3.js";
 import * as anchor from '@project-serum/anchor'
 import EndBotChallenge from './EndBotChallenge';
-import {findGatewayToken,} from '@identity.com/solana-gateway-ts'
+import security from '../../../settings/security';
+import config from '../../../config';
+import UseGtagEvent from '../../hooks/useGtagEvent';
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
-// @ts-ignore
-const BotChallenge = (props: {gatekeeperNetwork: anchor.web3.PublicKey, endpoint: string, failed?: boolean}) => {
+const BotChallenge = (props: {
+    gatekeeperNetwork: anchor.web3.PublicKey,
+    endpoint: string,
+    failed?: boolean,
+    demo?: boolean
+}) => {
     const wallet = useWallet()
-    const connection = useConnection();
 
     const [isLoading, setIsLoading] = useState(false)
     const [warning, setWarning] = useState({ status: false, msg: '', type: '' });
@@ -32,12 +35,20 @@ const BotChallenge = (props: {gatekeeperNetwork: anchor.web3.PublicKey, endpoint
     const startQuiz = async () => {
         setIsLoading(true)
 
-        const questionsObj = await axios.get(`/bot-questions/create-bot-quiz`)
+        let questionsObj;
+        if (props.demo) {
+            questionsObj = await axios.get(`/bot-questions/demo-quiz`)
+        } else {
+            questionsObj = await axios.get(`/bot-questions/create-bot-quiz`)
+        }
 
-        setQuestions(questionsObj.data)
+        const encryptedData = security.decryption(questionsObj.data, config.encryptionSecret);
 
-        setPageState('TRIVIA')
-        setIsLoading(false)
+        setQuestions(encryptedData);
+
+        setPageState('TRIVIA');
+        setIsLoading(false);
+        UseGtagEvent('quiz_started', 'Quiz Started');
     }
 
     useEffect(() => {
@@ -75,7 +86,7 @@ const BotChallenge = (props: {gatekeeperNetwork: anchor.web3.PublicKey, endpoint
 
                                             <button className="btn-small btn-primary mt-4"
                                                     disabled={warning.status}
-                                                    onClick={startQuiz}
+                                                onClick={startQuiz}
                                             >
                                                 VERIFY
                                             </button>

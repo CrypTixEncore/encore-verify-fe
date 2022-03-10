@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect} from 'react'
+import React from 'react'
 import '../../../App.css';
 import { Component } from 'react'
 import axios from '../../../settings/axios';
@@ -8,7 +8,9 @@ import EndBotChallenge from './EndBotChallenge';
 import Countdown from "react-countdown";
 import './BotTrivia.css';
 import BotChallenge from './BotChallenge'
-
+import security from '../../../settings/security';
+import config from '../../../config';
+import UseGtagEvent from '../../hooks/useGtagEvent';
 
 export const BotQuestion = ({ question, image, isLoading, renderCountdown, chooseAnswer }) => {
     const shuffleArray = array => {
@@ -22,11 +24,7 @@ export const BotQuestion = ({ question, image, isLoading, renderCountdown, choos
         return array
     }
 
-    const indices = shuffleArray([1,2,3,4]);
-
-    useEffect(() => {
-        console.log(indices)
-    }, [])
+    const indices = shuffleArray([1, 2, 3, 4]);
 
     return (
         <div className="bot-question connect-triva">
@@ -44,51 +42,19 @@ export const BotQuestion = ({ question, image, isLoading, renderCountdown, choos
                     {image && (
                         <div>
                             <div className="media-c">
-                                <img src={image.src} alt="question" className="drop-shadow img" />
+                                <img src={image.src} alt="question" className="drop-shadow img-b" />
                             </div>
                         </div>
                     )}
                     <div className="options">
                         {indices.map(index => (
                             <button className="btn btnChan text-left"
-                                    disabled={isLoading}
-                                    onClick={() => chooseAnswer(`option${index}`)}
+                                disabled={isLoading}
+                                onClick={() => chooseAnswer(`option${index}`)}
                             >
                                 {question[`option${index}`]}
                             </button>
                         ))}
-                        {/*<div>
-                            <button className="btn btnChan text-left"
-                                disabled={isLoading}
-                                onClick={() => chooseAnswer("option1")}
-                            >
-                                {question.option1}
-                            </button>
-                        </div>
-                        <div>
-                            <button className="btn btnChan  text-left"
-                                disabled={isLoading}
-                                onClick={() => chooseAnswer("option2")}
-                            >
-                                {question.option2}
-                            </button>
-                        </div>
-                        <div>
-                            <button className="btn btnChan text-left"
-                                disabled={isLoading}
-                                onClick={() => chooseAnswer("option3")}
-                            >
-                                {question.option3}
-                            </button>
-                        </div>
-                        <div>
-                            <button className="btn btnChan text-left"
-                                disabled={isLoading}
-                                onClick={() => chooseAnswer("option4")}
-                            >
-                                {question.option4}
-                            </button>
-                        </div>*/}
                     </div>
                 </div>
             </div>
@@ -174,32 +140,31 @@ class BotTrivia extends Component {
                 bufferCard: false
             }))
 
-            console.log(JSON.stringify(this.state.answers))
+            const payloadData = {
+                answers: this.state.answers,
+                wallet: this.props.wallet.toBase58(),
+                rpcUrl: this.props.endpoint,
+                gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
+            };
             try {
-                console.log(this.props.wallet)
-                console.log(JSON.stringify({
-                    answers: this.state.answers,
-                    wallet: this.props.wallet.toBase58(),
-                    rpcUrl: this.props.endpoint,
-                    gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
-                }, null, 2))
                 const returnObj = await axios.post(
                     '/bot-questions/verify-human', {
-                        answers: this.state.answers,
-                        wallet: this.props.wallet.toBase58(),
-                        rpcUrl: this.props.endpoint,
-                        gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
+                        payload: security.encryption(payloadData, config.encryptionSecret)
                     });
 
-                console.log(returnObj)
+                const decrypted = security.decryption(returnObj.data, config.encryptionSecret);
 
                 this.setState({
                     finishQuiz: true,
-                    returnObj: returnObj.data,
+                    returnObj: decrypted,
                     isLoading: false
-                })
-            } catch (e){
+                });
+
+                UseGtagEvent('quiz_successful', 'Quiz Successful');
+
+            } catch (e) {
                 console.error(e)
+                UseGtagEvent('quiz_failed', 'Quiz Failed');
 
                 await this.setState({
                     quizStatus: 'FAILED'
@@ -247,8 +212,6 @@ class BotTrivia extends Component {
         })
 
         this.bufferTimerChild.current.start();
-
-        console.log(this.props.wallet)
     }
 
     renderCountdown = () => {
@@ -299,22 +262,22 @@ class BotTrivia extends Component {
                         {this.props.questions && this.props.questions.length !== 0 && !this.state.finishQuiz && (
                             <>
                                 <BotQuestion question={this.props.questions[this.state.currentQuestion]}
-                                             image={this.state.images[this.state.currentQuestion]}
-                                             isLoading={this.state.isLoading}
-                                             renderCountdown={this.renderCountdown}
-                                             chooseAnswer={this.chooseAnswer}
+                                    image={this.state.images[this.state.currentQuestion]}
+                                    isLoading={this.state.isLoading}
+                                    renderCountdown={this.renderCountdown}
+                                    chooseAnswer={this.chooseAnswer}
                                 />
                                 <PoweredBy />
                             </>
                         )}
-                        {!this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'PASSED' &&(
-                            <EndBotChallenge sendableTransaction={this.state.returnObj}/>
+                        {!this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'PASSED' && (
+                            <EndBotChallenge sendableTransaction={this.state.returnObj} />
                         )}
                     </div>
 
                 )}
-                {!this.state.bufferCard && !this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'FAILED' &&(
-                    <BotChallenge endpoint={this.props.endpoint} gatekeeperNetwork={this.props.gatekeeperNetwork} failed={true}/>
+                {!this.state.bufferCard && !this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'FAILED' && (
+                    <BotChallenge endpoint={this.props.endpoint} gatekeeperNetwork={this.props.gatekeeperNetwork} failed={true} />
                 )}
             </div>
         )
