@@ -25,7 +25,7 @@ const BotChallenge = (props: {
     const [isLoading, setIsLoading] = useState(false)
     const [warning, setWarning] = useState({ status: false, msg: '', type: '' });
     const [pageState, setPageState] = useState('LANDING')
-    const [questions, setQuestions] = useState(null);
+    const [question, setQuestion] = useState(null);
     const [token, setToken] = useState("");
     const [showSignInModal, setShowSignInModal] = useState(false);
 
@@ -45,7 +45,7 @@ const BotChallenge = (props: {
 
         const encryptedData = questionsObj.data;
 
-        setQuestions(encryptedData.questions);
+        setQuestion(encryptedData.question);
         setToken(encryptedData.token)
 
         setPageState('TRIVIA');
@@ -97,7 +97,7 @@ const BotChallenge = (props: {
                 </div>
             )}
             {pageState === 'TRIVIA' && (
-                <BotTrivia questions={questions}
+                <BotTrivia startingQuestion={question}
                            wallet={wallet.publicKey!}
                            endpoint={props.endpoint}
                            gatekeeperNetwork={props.gatekeeperNetwork}

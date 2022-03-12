@@ -42,7 +42,7 @@ export const BotQuestion = ({ question, image, isLoading, renderCountdown, choos
                     {image && (
                         <div>
                             <div className="media-c">
-                                <img src={image.src} alt="question" className="drop-shadow img-b" />
+                                <img src={image} alt="question" className="drop-shadow img-b" />
                             </div>
                         </div>
                     )}
@@ -64,10 +64,11 @@ export const BotQuestion = ({ question, image, isLoading, renderCountdown, choos
 
 
 class BotTrivia extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            currentQuestion: 0,
+            currentQuestion: this.props.startingQuestion,
+            token: this.props.token,
             answers: [],
             finishQuiz: false,
             result: 0,
@@ -77,12 +78,13 @@ class BotTrivia extends Component {
             allowedTime: 15,
             bufferCard: true,
             bufferTime: 3,
-            images: [],
             option: '',
             returnObj: null,
             isLoading: true,
+            image: null,
             quizStatus: 'PASSED',
             warning: { status: false, msg: '', type: '' },
+            questionsAnswered: 0,
         };
 
         this.updateAnswer = this.updateAnswer.bind(this);
@@ -111,105 +113,79 @@ class BotTrivia extends Component {
 
         const timePassed = (parseInt(this.state.allowedTime) - timeLeft).toFixed(2)
 
-        // let key = this.props.questions[this.state.currentQuestion].questionId;
-        let key = this.props.questions[this.state.currentQuestion].question_id;
-        let temp = await this.state.answers;
-
-        temp.push({
-            answer: ans,
-            questionId: key,
-        })
-
         const totalTime = parseFloat(this.state.totalTime)
 
         const newTotalTime = (totalTime + parseFloat(timePassed))
 
         await this.setState(() => ({
-            answers: temp,
-            totalTime: parseFloat((newTotalTime).toFixed(2))
+            totalTime: parseFloat((newTotalTime).toFixed(2)),
+            isLoading: true
         }))
 
-        await this.setState(() => ({
-            bufferCard: true
-        }))
+        this.state.questionsAnswered++;
 
-        let current = this.state.currentQuestion + 1;
+        // let key = this.props.questions[this.state.currentQuestion].questionId;
+        let key = this.state.currentQuestion.question_id;
 
-        if (current === this.props.questions.length) {
-            await this.setState(() => ({
-                bufferCard: false
-            }))
+        const payloadData = {
+            answer: {
+                answer: ans,
+                questionId: key,
+            },
+            wallet: this.props.wallet.toBase58(),
+            rpcUrl: this.props.endpoint,
+            token: this.state.token,
+            gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
+        };
+        try {
+            const returnObj = await axios.post(
+                '/bot-questions/verify-human', payloadData);
 
-            const payloadData = {
-                answers: this.state.answers,
-                wallet: this.props.wallet.toBase58(),
-                rpcUrl: this.props.endpoint,
-                token: this.props.token,
-                gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
-            };
-            try {
-                const returnObj = await axios.post(
-                    '/bot-questions/verify-human', payloadData);
-
-                const decrypted = returnObj.data;
-
-                this.setState({
+            const decrypted = returnObj.data;
+            if (decrypted["question"]) {
+                this.state.token = decrypted.token;
+                await this.updateQuestion(decrypted.question);
+            } else {
+                await this.setState(() => ({
                     finishQuiz: true,
                     returnObj: decrypted,
-                    isLoading: false
-                });
+                    isLoading: false,
+                    bufferCard: false
+                }))
 
                 UseGtagEvent('quiz_successful', 'Quiz Successful');
-
-            } catch (e) {
-                console.error(e)
-                UseGtagEvent('quiz_failed', 'Quiz Failed');
-
-                await this.setState({
-                    quizStatus: 'FAILED'
-                })
-
-                this.setState({
-                    finishQuiz: true,
-                    isLoading: false
-                })
             }
-        } else {
-            await this.updateQuestion();
-            this.bufferTimerChild.current.start();
+
+        } catch (e) {
+            console.error(e)
+            UseGtagEvent('quiz_failed', 'Quiz Failed');
+
+            await this.setState({
+                quizStatus: 'FAILED'
+            })
+
+            this.setState({
+                finishQuiz: true,
+                isLoading: false
+            })
         }
     }
 
-    updateQuestion = async () => {
-        let current = this.state.currentQuestion + 1;
+    updateQuestion = async (question) => {
+        let image = new Image();
+        image.src = question.question_image
 
         await this.setState(() => ({
-            currentQuestion: current,
-        }))
+            currentQuestion: question,
+            bufferCard: true,
+            isLoading: false,
+            image: image
+        }));
+
+        this.bufferTimerChild.current.start();
     }
 
     componentDidMount = async () => {
-        this.setState({
-            isLoading: true
-        })
-        const images = []
-
-        this.props.questions.forEach((picture) => {
-            if (picture.question_image) {
-                let img = new Image();
-                // img.src = picture.media;
-                img.src = picture.question_image;
-                images.push(img)
-            } else {
-                images.push(null)
-            }
-        });
-
-        this.setState({
-            images: images,
-            isLoading: false
-        })
-
         this.bufferTimerChild.current.start();
     }
 
@@ -224,7 +200,7 @@ class BotTrivia extends Component {
                 autoStart={true}
                 renderer={props =>
                     <div className="head5 text-left timer">
-                        <span className="blue-text">{this.state.currentQuestion + 1} of {this.props.questions.length}</span> with <span className="blue-text">{(props.total / 1000)} seconds</span> remaining
+                        <span className="blue-text">Question {this.state.questionsAnswered + 1}</span> with <span className="blue-text">{(props.total / 1000)} seconds</span> remaining
                     </div>
                 }
                 onPause={async (props) => this.updateAnswer((props.total / 1000).toFixed(2))}
@@ -249,7 +225,7 @@ class BotTrivia extends Component {
                             }}
                             renderer={props =>
                                 <>
-                                    <div className="head3 bold-text">{this.state.currentQuestion === 0 ? 'The challenge starts in' : 'Next question in'}: <div className="blue-text my-5 bold-text countdown-text">{props.total / 1000}</div></div>
+                                    <div className="head3 bold-text">{this.state.questionsAnswered == 0 ? 'The challenge starts in' : 'Next question in'}: <div className="blue-text my-5 bold-text countdown-text">{props.total / 1000}</div></div>
                                 </>
                             }
                         />
@@ -258,10 +234,10 @@ class BotTrivia extends Component {
                 )}
                 {!this.state.bufferCard && (
                     <div className="bot-container container pb-4">
-                        {this.props.questions && this.props.questions.length !== 0 && !this.state.finishQuiz && (
+                        {this.state.currentQuestion && !this.state.finishQuiz && (
                             <>
-                                <BotQuestion question={this.props.questions[this.state.currentQuestion]}
-                                    image={this.state.images[this.state.currentQuestion]}
+                                <BotQuestion question={this.state.currentQuestion}
+                                    image={this.state.image}
                                     isLoading={this.state.isLoading}
                                     renderCountdown={this.renderCountdown}
                                     chooseAnswer={this.chooseAnswer}
