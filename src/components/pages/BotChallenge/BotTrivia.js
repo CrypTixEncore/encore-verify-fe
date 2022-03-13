@@ -160,8 +160,11 @@ class BotTrivia extends Component {
     }
 
     updateQuestion = async (question) => {
-        let image = new Image();
-        image.src = question.question_image
+        let image = null;
+        if (question.question_image) {
+            image = new Image();
+            image.src = question.question_image
+        }
 
         const shuffleArray = array => {
             for (let i = array.length - 1; i > 0; i--) {
