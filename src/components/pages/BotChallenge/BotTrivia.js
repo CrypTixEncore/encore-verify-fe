@@ -12,20 +12,7 @@ import security from '../../../settings/security';
 import config from '../../../config';
 import UseGtagEvent from '../../hooks/useGtagEvent';
 
-export const BotQuestion = ({ question, image, isLoading, renderCountdown, chooseAnswer }) => {
-    const shuffleArray = array => {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            const temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
-        }
-
-        return array
-    }
-
-    const indices = shuffleArray([1, 2, 3, 4]);
-
+export const BotQuestion = ({ question, image, indices, isLoading, renderCountdown, chooseAnswer }) => {
     return (
         <div className="bot-question connect-triva">
             <div className="trival-block">
@@ -42,7 +29,7 @@ export const BotQuestion = ({ question, image, isLoading, renderCountdown, choos
                     {image && (
                         <div>
                             <div className="media-c">
-                                <img src={image} alt="question" className="drop-shadow img-b" />
+                                <img src={image.src} alt="question" className="drop-shadow img-b" />
                             </div>
                         </div>
                     )}
@@ -85,6 +72,7 @@ class BotTrivia extends Component {
             quizStatus: 'PASSED',
             warning: { status: false, msg: '', type: '' },
             questionsAnswered: 0,
+            questionIndices: [1,2,3,4]
         };
 
         this.updateAnswer = this.updateAnswer.bind(this);
@@ -175,11 +163,23 @@ class BotTrivia extends Component {
         let image = new Image();
         image.src = question.question_image
 
+        const shuffleArray = array => {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                const temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+
+            return array
+        }
+
         await this.setState(() => ({
             currentQuestion: question,
             bufferCard: true,
             isLoading: false,
-            image: image
+            image: image,
+            questionIndices: shuffleArray([1, 2, 3, 4])
         }));
 
         this.bufferTimerChild.current.start();
@@ -200,7 +200,16 @@ class BotTrivia extends Component {
                 autoStart={true}
                 renderer={props =>
                     <div className="head5 text-left timer">
-                        <span className="blue-text">Question {this.state.questionsAnswered + 1}</span> with <span className="blue-text">{(props.total / 1000)} seconds</span> remaining
+                        {this.state.isLoading && (
+                            <>
+                                Checking results for <span className="blue-text">Question {this.state.questionsAnswered + 1}</span>
+                            </>
+                        )}
+                        {!this.state.isLoading && (
+                            <>
+                                <span className="blue-text">Question {this.state.questionsAnswered + 1}</span> with <span className="blue-text">{(props.total / 1000)} seconds</span> remaining
+                            </>
+                        )}
                     </div>
                 }
                 onPause={async (props) => this.updateAnswer((props.total / 1000).toFixed(2))}
@@ -238,6 +247,7 @@ class BotTrivia extends Component {
                             <>
                                 <BotQuestion question={this.state.currentQuestion}
                                     image={this.state.image}
+                                    indices={this.state.questionIndices}
                                     isLoading={this.state.isLoading}
                                     renderCountdown={this.renderCountdown}
                                     chooseAnswer={this.chooseAnswer}
