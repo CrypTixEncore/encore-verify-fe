@@ -113,7 +113,7 @@ class BotTrivia extends Component {
         this.state.questionsAnswered++;
 
         // let key = this.props.questions[this.state.currentQuestion].questionId;
-        let key = this.state.currentQuestion.question_id;
+        let key = this.state.currentQuestion.questionId;
 
         const payloadData = {
             answer: {
@@ -161,9 +161,9 @@ class BotTrivia extends Component {
 
     updateQuestion = async (question) => {
         let image = null;
-        if (question.question_image) {
+        if (question.questionImage) {
             image = new Image();
-            image.src = question.question_image
+            image.src = question.questionImage
         }
 
         const shuffleArray = array => {
@@ -189,6 +189,14 @@ class BotTrivia extends Component {
     }
 
     componentDidMount = async () => {
+        let image = null;
+        if (this.props.startingQuestion.questionImage) {
+            image = new Image();
+            image.src = this.props.startingQuestion.questionImage
+            this.setState({
+                image: image
+            })
+        }
         this.bufferTimerChild.current.start();
     }
 
