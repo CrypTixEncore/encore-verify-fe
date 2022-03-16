@@ -5,7 +5,7 @@ import BotTrivia from "./BotTrivia";
 import Loader from '../Loader/Loader';
 import PoweredBy from '../../PoweredBy';
 import './BotChallenge.css';
-import {useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import * as anchor from '@project-serum/anchor'
 import EndBotChallenge from './EndBotChallenge';
 import security from '../../../settings/security';
@@ -54,7 +54,13 @@ const BotChallenge = (props: {
     }
 
     if (!wallet.connected) {
-        return <div />
+        return <>
+            <div className='text-center mt-3'>
+                <div className="header-text-c">We ain’t a-bot that.</div>
+                <div className="head5">We want to keep this drop safe and let real users<br />  and fans enjoy it - not bots.</div>
+                <div className="head5 mt-4">Select a wallet to get started. Make sure you use the same wallet for the mint.</div>
+            </div>
+        </>
     }
 
     return (
@@ -82,7 +88,7 @@ const BotChallenge = (props: {
                                             }
 
                                             <button className="btn-small btn-primary mt-4"
-                                                    disabled={warning.status}
+                                                disabled={warning.status}
                                                 onClick={startQuiz}
                                             >
                                                 VERIFY
@@ -98,14 +104,14 @@ const BotChallenge = (props: {
             )}
             {pageState === 'TRIVIA' && (
                 <BotTrivia startingQuestion={question}
-                           wallet={wallet.publicKey!}
-                           endpoint={props.endpoint}
-                           gatekeeperNetwork={props.gatekeeperNetwork}
-                           token={token}
+                    wallet={wallet.publicKey!}
+                    endpoint={props.endpoint}
+                    gatekeeperNetwork={props.gatekeeperNetwork}
+                    token={token}
                 />
             )}
             {pageState === 'VALID' && (
-                <EndBotChallenge sendableTransaction={null} valid={true}/>
+                <EndBotChallenge sendableTransaction={null} valid={true} />
             )}
         </div>
     )

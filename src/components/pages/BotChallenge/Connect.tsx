@@ -50,12 +50,10 @@ export default function Connect() {
                 <ConnectionProvider endpoint={endpoint}>
                     <WalletProvider wallets={wallets}>
                         <WalletModalProvider>
-                            <WalletMultiButton disabled={isLoading} className="connect-btn mt-3 text-center" />
-                            <div className='text-center mt-3'>
-                                <div className="header-text-c">We ain’t a-bot that.</div>
-                                <div className="head5">We want to keep this drop safe and let real users<br />  and fans enjoy it - not bots.</div>
-                                <div className="head5 mt-4">Select a wallet to get started. Make sure you use the same wallet for the mint.</div>
-                            </div>
+                            <>
+                                <WalletMultiButton disabled={isLoading} className="connect-btn mt-3 text-center" />
+                                
+                            </>
                             {gatekeeperNetwork && (
                                 <BotChallenge gatekeeperNetwork={gatekeeperNetwork}
                                     endpoint={endpoint}
@@ -64,6 +62,7 @@ export default function Connect() {
                             )}
                         </WalletModalProvider>
                     </WalletProvider>
+
                 </ConnectionProvider>
             )}
         </div>
