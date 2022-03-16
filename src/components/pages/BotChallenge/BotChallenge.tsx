@@ -73,9 +73,9 @@ const BotChallenge = (props: {
                                         <div className="left-col mt-2">
                                             {!props.failed ? (
                                                 <>
-                                                    <div className="header-text-c">We ain't a-bot that.</div>
-                                                    <div className="head5">We want to keep this drop safe, ,<br /> and let real users and fans enjoy it - not bots.</div>
-                                                    <div className="head5 mt-4">Please answer the following questions.</div>
+                                                    <div className="header-text-c">We ain’t a-bot that.</div>
+                                                    <div className="head5">We want to keep this drop safe and let real users<br />  and fans enjoy it - not bots.</div>
+                                                    <div className="head5 mt-4">Click on the button below to verify your wallet.</div>
                                                 </>
                                             ) : (
                                                 <>
