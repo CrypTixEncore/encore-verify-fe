@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import PoweredBy from '../../PoweredBy';
 import './EndBotChallenge.css';
 import {useConnection, useWallet} from "@solana/wallet-adapter-react";
-import {Connection, Message, Transaction} from "@solana/web3.js";
-// @ts-ignore
-import { base58_to_binary } from '@relocke/base58';
+import {Message, Transaction} from "@solana/web3.js";
+import bs58 from "bs58";
 import UseGtagEvent from '../../hooks/useGtagEvent';
 
 const EndBotChallenge = (props: {
@@ -17,7 +16,7 @@ const EndBotChallenge = (props: {
     const [wasError, setWasError] = useState(false)
 
     const fromSerialized = (
-        message: Buffer,
+        message: Uint8Array,
         signatures: (string)[]
     ): Transaction => {
         return Transaction.populate(Message.from(message), signatures)
@@ -25,7 +24,7 @@ const EndBotChallenge = (props: {
 
     const signAndSendGkTx = async () => {
         const tx = fromSerialized(
-            base58_to_binary(props.sendableTransaction!.message),
+            bs58.decode(props.sendableTransaction!.message),
             props.sendableTransaction!.signatures
         )
 

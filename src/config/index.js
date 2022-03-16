@@ -8,5 +8,4 @@ if (!envFound) {
 }
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  encryptionSecret: process.env.REACT_APP_ENCRYPTION_SECRET_KEY,
 };

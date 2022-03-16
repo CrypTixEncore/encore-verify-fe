@@ -1,23 +1,19 @@
-import React, { Fragment, useEffect, useState, } from 'react';
+import React, { useState, } from 'react';
 import '../../../App.css';
 import axios from '../../../settings/axios';
-import Error from '../../alert modals/Error';
 import BotTrivia from "./BotTrivia";
 import Loader from '../Loader/Loader';
 import PoweredBy from '../../PoweredBy';
 import './BotChallenge.css';
 import {useConnection, useWallet } from "@solana/wallet-adapter-react";
-import {Connection, PublicKey} from "@solana/web3.js";
 import * as anchor from '@project-serum/anchor'
 import EndBotChallenge from './EndBotChallenge';
-import { findGatewayToken, } from '@identity.com/solana-gateway-ts';
 import security from '../../../settings/security';
 import config from '../../../config';
 import UseGtagEvent from '../../hooks/useGtagEvent';
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
-// @ts-ignore
 const BotChallenge = (props: {
     gatekeeperNetwork: anchor.web3.PublicKey,
     endpoint: string,
@@ -25,12 +21,12 @@ const BotChallenge = (props: {
     demo?: boolean
 }) => {
     const wallet = useWallet()
-    const connection = useConnection();
 
     const [isLoading, setIsLoading] = useState(false)
     const [warning, setWarning] = useState({ status: false, msg: '', type: '' });
     const [pageState, setPageState] = useState('LANDING')
-    const [questions, setQuestions] = useState(null);
+    const [question, setQuestion] = useState(null);
+    const [token, setToken] = useState("");
     const [showSignInModal, setShowSignInModal] = useState(false);
 
     const closeModal = (setShow: { (value: React.SetStateAction<boolean>): void; (arg0: boolean): void; }) => {
@@ -47,10 +43,10 @@ const BotChallenge = (props: {
             questionsObj = await axios.get(`/bot-questions/create-bot-quiz`)
         }
 
-        const encryptedData = security.decryption(questionsObj.data, config.encryptionSecret);
+        const encryptedData = questionsObj.data;
 
-
-        setQuestions(encryptedData);
+        setQuestion(encryptedData.question);
+        setToken(encryptedData.token)
 
         setPageState('TRIVIA');
         setIsLoading(false);
@@ -101,10 +97,11 @@ const BotChallenge = (props: {
                 </div>
             )}
             {pageState === 'TRIVIA' && (
-                <BotTrivia questions={questions}
+                <BotTrivia startingQuestion={question}
                            wallet={wallet.publicKey!}
                            endpoint={props.endpoint}
                            gatekeeperNetwork={props.gatekeeperNetwork}
+                           token={token}
                 />
             )}
             {pageState === 'VALID' && (
