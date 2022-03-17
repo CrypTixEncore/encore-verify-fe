@@ -58,8 +58,9 @@ const BotChallenge = (props: {
             <div className='text-center mt-3'>
                 <div className="header-text-c">We ain’t a-bot that.</div>
                 <div className="head5">We want to keep this drop safe and let real users<br />  and fans enjoy it - not bots.</div>
-                <div className="head5 mt-4">Connect your wallet to get started. Make sure you use the same address for the mint.</div>
+                <div className="head5 mt-4">Connect your wallet to get started. <br/>Make sure you use the same wallet address for the mint.</div>
             </div>
+            <PoweredBy />
         </>
     }
 
@@ -77,7 +78,7 @@ const BotChallenge = (props: {
                                                 <>
                                                     <div className="header-text-c">We ain’t a-bot that.</div>
                                                     <div className="head5">We want to keep this drop safe and let real users<br />  and fans enjoy it - not bots.</div>
-                                                    <div className="head5 mt-4">Click on the button below to verify your wallet.</div>
+                                                    <div className="head5 mt-4">Click on the button below to verify your wallet address.</div>
                                                 </>
                                             ) : (
                                                 <>
