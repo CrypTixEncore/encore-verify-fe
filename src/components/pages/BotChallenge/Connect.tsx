@@ -17,6 +17,9 @@ import config from '../../../config';
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
+const devnetRpc = 'https://api.devnet.solana.com';
+const mainnetRpc = 'https://solana-api.projectserum.com';
+
 export default function Connect() {
     //const [warning, setWarning] = useState({ status: false, msg: '', type: '' });
     const [endpoint, setEndpoint] = useState<string>('')
@@ -47,17 +50,16 @@ export default function Connect() {
     return (
         <div className="container over-m">
             {!isLoading && (
-                <ConnectionProvider endpoint={endpoint}>
+                <ConnectionProvider endpoint={
+                    gatekeeperNetwork?.toBase58() === 'tibePmPaoTgrs929rWpu755EXaxC7M3SthVCf6GzjZt' ? mainnetRpc : devnetRpc
+                }>
                     <WalletProvider wallets={wallets}>
                         <WalletModalProvider>
                             <>
                                 <WalletMultiButton disabled={isLoading} className="connect-btn mt-3 text-center" />
                             </>
                             {gatekeeperNetwork && (
-                                <BotChallenge gatekeeperNetwork={gatekeeperNetwork}
-                                    endpoint={endpoint}
-                                    demo={demo}
-                                />
+                                <BotChallenge gatekeeperNetwork={gatekeeperNetwork} demo={demo}/>
                             )}
                         </WalletModalProvider>
                     </WalletProvider>

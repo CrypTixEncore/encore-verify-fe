@@ -16,7 +16,6 @@ require('@solana/wallet-adapter-react-ui/styles.css');
 
 const BotChallenge = (props: {
     gatekeeperNetwork: anchor.web3.PublicKey,
-    endpoint: string,
     failed?: boolean,
     demo?: boolean
 }) => {
@@ -27,11 +26,14 @@ const BotChallenge = (props: {
     const [pageState, setPageState] = useState('LANDING')
     const [question, setQuestion] = useState(null);
     const [token, setToken] = useState("");
+    /*
     const [showSignInModal, setShowSignInModal] = useState(false);
 
     const closeModal = (setShow: { (value: React.SetStateAction<boolean>): void; (arg0: boolean): void; }) => {
         setShow(false)
     }
+
+     */
 
     const startQuiz = async () => {
         setIsLoading(true)
@@ -106,7 +108,6 @@ const BotChallenge = (props: {
             {pageState === 'TRIVIA' && (
                 <BotTrivia startingQuestion={question}
                     wallet={wallet.publicKey!}
-                    endpoint={props.endpoint}
                     gatekeeperNetwork={props.gatekeeperNetwork}
                     token={token}
                 />
