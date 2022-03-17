@@ -52,7 +52,6 @@ export default function Connect() {
                         <WalletModalProvider>
                             <>
                                 <WalletMultiButton disabled={isLoading} className="connect-btn mt-3 text-center" />
-                                
                             </>
                             {gatekeeperNetwork && (
                                 <BotChallenge gatekeeperNetwork={gatekeeperNetwork}
