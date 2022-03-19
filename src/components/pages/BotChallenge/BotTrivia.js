@@ -120,7 +120,6 @@ class BotTrivia extends Component {
                 answer: ans,
                 questionId: key,
             },
-            wallet: this.props.wallet.toBase58(),
             rpcUrl: this.props.endpoint,
             token: this.state.token,
             gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
@@ -159,22 +158,22 @@ class BotTrivia extends Component {
         }
     }
 
+    shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+
+        return array
+	}
+
     updateQuestion = async (question) => {
         let image = null;
         if (question.questionImage) {
             image = new Image();
-            image.src = question.questionImage
-        }
-
-        const shuffleArray = array => {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                const temp = array[i];
-                array[i] = array[j];
-                array[j] = temp;
-            }
-
-            return array
+            image.src = question.questionImage;
         }
 
         await this.setState(() => ({
@@ -182,7 +181,7 @@ class BotTrivia extends Component {
             bufferCard: true,
             isLoading: false,
             image: image,
-            questionIndices: shuffleArray([1, 2, 3, 4])
+            questionIndices: this.shuffleArray([1, 2, 3, 4])
         }));
 
         this.bufferTimerChild.current.start();
