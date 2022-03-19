@@ -5,7 +5,7 @@ import BotTrivia from "./BotTrivia";
 import Loader from '../Loader/Loader';
 import PoweredBy from '../../PoweredBy';
 import './BotChallenge.css';
-import {useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import * as anchor from '@project-serum/anchor'
 import EndBotChallenge from './EndBotChallenge';
 import security from '../../../settings/security';
@@ -16,7 +16,6 @@ require('@solana/wallet-adapter-react-ui/styles.css');
 
 const BotChallenge = (props: {
     gatekeeperNetwork: anchor.web3.PublicKey,
-    endpoint: string,
     failed?: boolean,
     demo?: boolean
 }) => {
@@ -27,11 +26,14 @@ const BotChallenge = (props: {
     const [pageState, setPageState] = useState('LANDING')
     const [question, setQuestion] = useState(null);
     const [token, setToken] = useState("");
+    /*
     const [showSignInModal, setShowSignInModal] = useState(false);
 
     const closeModal = (setShow: { (value: React.SetStateAction<boolean>): void; (arg0: boolean): void; }) => {
         setShow(false)
     }
+
+     */
 
     const startQuiz = async () => {
         setIsLoading(true)
@@ -57,7 +59,14 @@ const BotChallenge = (props: {
     }
 
     if (!wallet.connected) {
-        return <div />
+        return <>
+            <div className='text-center mt-3'>
+                <div className="header-text-c">We ain’t a-bot that.</div>
+                <div className="head5">We want to keep this drop safe and let real users<br />  and fans enjoy it - not bots.</div>
+                <div className="head5 mt-4">Connect your wallet to get started. <br/>Make sure you use the same wallet address for the mint.</div>
+            </div>
+            <PoweredBy />
+        </>
     }
 
     return (
@@ -72,9 +81,9 @@ const BotChallenge = (props: {
                                         <div className="left-col mt-2">
                                             {!props.failed ? (
                                                 <>
-                                                    <div className="header-text-c">We ain't a-bot that.</div>
-                                                    <div className="head5">We want to keep this drop safe, ,<br /> and let real users and fans enjoy it - not bots.</div>
-                                                    <div className="head5 mt-4">Please answer the following questions.</div>
+                                                    <div className="header-text-c">We ain’t a-bot that.</div>
+                                                    <div className="head5">We want to keep this drop safe and let real users<br />  and fans enjoy it - not bots.</div>
+                                                    <div className="head5 mt-4">Click on the button below to verify your wallet address.</div>
                                                 </>
                                             ) : (
                                                 <>
@@ -85,7 +94,7 @@ const BotChallenge = (props: {
                                             }
 
                                             <button className="btn-small btn-primary mt-4"
-                                                    disabled={warning.status}
+                                                disabled={warning.status}
                                                 onClick={startQuiz}
                                             >
                                                 VERIFY
@@ -101,14 +110,13 @@ const BotChallenge = (props: {
             )}
             {pageState === 'TRIVIA' && (
                 <BotTrivia startingQuestion={question}
-                           wallet={wallet.publicKey!}
-                           endpoint={props.endpoint}
-                           gatekeeperNetwork={props.gatekeeperNetwork}
-                           token={token}
+                    wallet={wallet.publicKey!}
+                    gatekeeperNetwork={props.gatekeeperNetwork}
+                    token={token}
                 />
             )}
             {pageState === 'VALID' && (
-                <EndBotChallenge sendableTransaction={null} valid={true}/>
+                <EndBotChallenge sendableTransaction={null} valid={true} />
             )}
         </div>
     )

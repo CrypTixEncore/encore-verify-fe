@@ -120,7 +120,6 @@ class BotTrivia extends Component {
                 answer: ans,
                 questionId: key,
             },
-            rpcUrl: this.props.endpoint,
             token: this.state.token,
             gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
         };
@@ -244,7 +243,7 @@ class BotTrivia extends Component {
                             }}
                             renderer={props =>
                                 <>
-                                    <div className="head3 bold-text">{this.state.questionsAnswered == 0 ? 'The challenge starts in' : 'Next question in'}: <div className="blue-text my-5 bold-text countdown-text">{props.total / 1000}</div></div>
+                                    <div className="head3 bold-text">{this.state.questionsAnswered.toInteger === 0 ? 'The challenge starts in' : 'Next question in'}: <div className="blue-text my-5 bold-text countdown-text">{props.total / 1000}</div></div>
                                 </>
                             }
                         />
@@ -272,7 +271,7 @@ class BotTrivia extends Component {
 
                 )}
                 {!this.state.bufferCard && !this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'FAILED' && (
-                    <BotChallenge endpoint={this.props.endpoint} gatekeeperNetwork={this.props.gatekeeperNetwork} failed={true} />
+                    <BotChallenge gatekeeperNetwork={this.props.gatekeeperNetwork} failed={true} />
                 )}
             </div>
         )
