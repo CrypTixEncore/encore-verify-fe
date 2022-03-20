@@ -16,7 +16,6 @@ require('@solana/wallet-adapter-react-ui/styles.css');
 
 const BotChallenge = (props: {
     gatekeeperNetwork: anchor.web3.PublicKey,
-    endpoint: string,
     failed?: boolean,
     demo?: boolean
 }) => {
@@ -27,11 +26,14 @@ const BotChallenge = (props: {
     const [pageState, setPageState] = useState('LANDING')
     const [question, setQuestion] = useState(null);
     const [token, setToken] = useState("");
+    /*
     const [showSignInModal, setShowSignInModal] = useState(false);
 
     const closeModal = (setShow: { (value: React.SetStateAction<boolean>): void; (arg0: boolean): void; }) => {
         setShow(false)
     }
+
+     */
 
     const startQuiz = async () => {
         setIsLoading(true)
@@ -56,15 +58,11 @@ const BotChallenge = (props: {
     if (!wallet.connected) {
         return <>
             <div className='text-center mt-3'>
-                <div className="header-text-c-h">Prove you’re not a bot.</div>
-                <div className="c-h-b">Answer 3 questions. You will have 15 seconds for each question.</div>
-                <div className="c-h-b mt-4">Once you pass the challenge you can claim a token which will allow you to mint.</div>
-                <button className="btn d-btn"
-                    disabled
-                >
-                   Start Challenge
-                </button>
-            </div>  
+                <div className="header-text-c">We ain’t a-bot that.</div>
+                <div className="head5">We want to keep this drop safe and let real users<br />  and fans enjoy it - not bots.</div>
+                <div className="head5 mt-4">Connect your wallet to get started. <br/>Make sure you use the same wallet address for the mint.</div>
+            </div>
+            <PoweredBy />
         </>
     }
 
@@ -82,7 +80,7 @@ const BotChallenge = (props: {
                                                 <>
                                                     <div className="header-text-c">We ain’t a-bot that.</div>
                                                     <div className="head5">We want to keep this drop safe and let real users<br />  and fans enjoy it - not bots.</div>
-                                                    <div className="head5 mt-4">Click on the button below to verify your wallet.</div>
+                                                    <div className="head5 mt-4">Click on the button below to verify your wallet address.</div>
                                                 </>
                                             ) : (
                                                 <>
@@ -109,7 +107,6 @@ const BotChallenge = (props: {
             {pageState === 'TRIVIA' && (
                 <BotTrivia startingQuestion={question}
                     wallet={wallet.publicKey!}
-                    endpoint={props.endpoint}
                     gatekeeperNetwork={props.gatekeeperNetwork}
                     token={token}
                 />
