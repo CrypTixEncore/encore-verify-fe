@@ -56,10 +56,15 @@ const BotChallenge = (props: {
     if (!wallet.connected) {
         return <>
             <div className='text-center mt-3'>
-                <div className="header-text-c">We ain’t a-bot that.</div>
-                <div className="head5">We want to keep this drop safe and let real users<br />  and fans enjoy it - not bots.</div>
-                <div className="head5 mt-4">Select a wallet to get started. Make sure you use the same wallet for the mint.</div>
-            </div>
+                <div className="header-text-c-h">Prove you’re not a bot.</div>
+                <div className="c-h-b">Answer 3 questions. You will have 15 seconds for each question.</div>
+                <div className="c-h-b mt-4">Once you pass the challenge you can claim a token which will allow you to mint.</div>
+                <button className="btn d-btn"
+                    disabled
+                >
+                   Start Challenge
+                </button>
+            </div>  
         </>
     }
 
@@ -69,10 +74,10 @@ const BotChallenge = (props: {
                 <div>
                     <>
                         {isLoading ? <Loader /> : (
-                            <div className="bot-container mt-3 pb-5 text-center ">
-                                <div className="container pt-2">
+                            <div className="bot-container text-center ">
+                                <div className="container">
                                     <div className="connect-triva">
-                                        <div className="left-col mt-2">
+                                        <div className="left-col">
                                             {!props.failed ? (
                                                 <>
                                                     <div className="header-text-c">We ain’t a-bot that.</div>
@@ -87,16 +92,15 @@ const BotChallenge = (props: {
                                             )
                                             }
 
-                                            <button className="btn-small btn-primary mt-4"
+                                            <button className="btn d-btn"
                                                 disabled={warning.status}
                                                 onClick={startQuiz}
                                             >
-                                                VERIFY
+                                                Start Challenge
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                                <PoweredBy />
                             </div>
                         )}
                     </>

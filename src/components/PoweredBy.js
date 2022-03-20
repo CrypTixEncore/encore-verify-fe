@@ -1,13 +1,12 @@
 import React from 'react';
 import '../App.css';
-import logo from '../utils/e-logo-b.png';
+import logo from '../utils/n-power.png';
 
 export default function PoweredBy() {
     return (
-        <div className="footer mt-2 text-center">
+        <div className="footer mt-3 text-center">
             <div>
-                <div>powered by</div>
-                <img height="40px" src={logo} alt="encore-logo" />
+                <img height="28px" src={logo} alt="encore-logo" />
             </div>
         </div>
     )

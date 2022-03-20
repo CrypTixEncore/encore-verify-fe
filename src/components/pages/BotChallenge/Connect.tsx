@@ -12,6 +12,7 @@ import {
 } from "@solana/wallet-adapter-wallets";
 
 import BotChallenge from './BotChallenge';
+import PoweredBy from '../../PoweredBy';
 import config from '../../../config';
 
 
@@ -45,26 +46,26 @@ export default function Connect() {
     ], []);
 
     return (
-        <div className="container over-m">
+        <div>
+        <div className="container over-m mt-3">
             {!isLoading && (
                 <ConnectionProvider endpoint={endpoint}>
                     <WalletProvider wallets={wallets}>
                         <WalletModalProvider>
-                            <>
-                                <WalletMultiButton disabled={isLoading} className="connect-btn mt-3 text-center" />
-                                
-                            </>
+
                             {gatekeeperNetwork && (
                                 <BotChallenge gatekeeperNetwork={gatekeeperNetwork}
                                     endpoint={endpoint}
                                     demo={demo}
                                 />
                             )}
+                            <WalletMultiButton disabled={isLoading} className="connect-btn mt-3 text-center" />
                         </WalletModalProvider>
                     </WalletProvider>
-
                 </ConnectionProvider>
             )}
+            </div>
+            <PoweredBy />
         </div>
     )
 }
