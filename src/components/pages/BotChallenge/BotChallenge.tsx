@@ -1,4 +1,4 @@
-import React, { useState, } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import '../../../App.css';
 import axios from '../../../settings/axios';
 import BotTrivia from "./BotTrivia";
@@ -11,13 +11,15 @@ import EndBotChallenge from './EndBotChallenge';
 import security from '../../../settings/security';
 import config from '../../../config';
 import UseGtagEvent from '../../hooks/useGtagEvent';
+import { WalletModalProvider, WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
 const BotChallenge = (props: {
     gatekeeperNetwork: anchor.web3.PublicKey,
     failed?: boolean,
-    demo?: boolean
+    demo?: boolean,
+    // func?: any,
 }) => {
     const wallet = useWallet()
 
@@ -26,6 +28,17 @@ const BotChallenge = (props: {
     const [pageState, setPageState] = useState('LANDING')
     const [question, setQuestion] = useState(null);
     const [token, setToken] = useState("");
+
+    // useEffect(() => {
+    //     if (props.failed) {
+    //         props.func('false');
+    //     }
+    // }, [props]);
+
+    
+
+    
+
     /*
     const [showSignInModal, setShowSignInModal] = useState(false);
 
@@ -51,42 +64,48 @@ const BotChallenge = (props: {
         setToken(encryptedData.token)
 
         setPageState('TRIVIA');
+        // props?.func('true')
         setIsLoading(false);
         UseGtagEvent('quiz_started', 'Quiz Started');
     }
 
+
     if (!wallet.connected) {
         return <>
             <div className='text-center mt-3'>
-                <div className="header-text-c">We ain’t a-bot that.</div>
-                <div className="head5">We want to keep this drop safe and let real users<br />  and fans enjoy it - not bots.</div>
-                <div className="head5 mt-4">Connect your wallet to get started. <br/>Make sure you use the same wallet address for the mint.</div>
+                <div className="header-text-c-h">Prove you’re not a bot.</div>
+                <div className="c-h-b">Answer 3 questions. You will have 15 seconds for each question.</div>
+                <div className="c-h-b mt-4">Once you pass the challenge you can claim a token which will allow you to mint.</div>
+                <button className="btn d-btn"
+                    disabled
+                >
+                    Start Challenge
+                </button>
+                <WalletMultiButton disabled={isLoading} className= 'connect-btn mt-2 text-center' />
             </div>
-            <PoweredBy />
         </>
     }
 
     return (
-        <div className="container">
+        <div className="">
             {pageState === 'LANDING' && (
                 <div>
-                    <>
                         {isLoading ? <Loader /> : (
                             <div className="bot-container text-center ">
-                                <div className="container">
+                                <div className="">
                                     <div className="connect-triva">
                                         <div className="left-col">
                                             {!props.failed ? (
-                                                <>
-                                                    <div className="header-text-c">We ain’t a-bot that.</div>
-                                                    <div className="head5">We want to keep this drop safe and let real users<br />  and fans enjoy it - not bots.</div>
-                                                    <div className="head5 mt-4">Click on the button below to verify your wallet address.</div>
-                                                </>
+                                                <Fragment>
+                                                    <div className="header-text-c-h">Prove you’re not a bot.</div>
+                                                    <div className="c-h-b">Answer 3 questions. You will have 15 seconds for each question.</div>
+                                                    <div className="c-h-b mt-4">Once you pass the challenge you can claim a token which will allow you to mint.</div>
+                                                </Fragment>
                                             ) : (
-                                                <>
+                                                <Fragment>
                                                     <div className="header-text-c">You failed!</div>
                                                     <div className="head5">Go ahead and try again.</div>
-                                                </>
+                                                </Fragment>
                                             )
                                             }
 
@@ -95,13 +114,13 @@ const BotChallenge = (props: {
                                                 onClick={startQuiz}
                                             >
                                                 Start Challenge
-                                            </button>
+                                        </button>
+                                        <WalletMultiButton disabled={isLoading} className= 'connect-btn mt-2 text-center' />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         )}
-                    </>
                 </div>
             )}
             {pageState === 'TRIVIA' && (

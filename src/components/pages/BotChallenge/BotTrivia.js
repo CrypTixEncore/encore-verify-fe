@@ -11,39 +11,38 @@ import BotChallenge from './BotChallenge'
 import security from '../../../settings/security';
 import config from '../../../config';
 import UseGtagEvent from '../../hooks/useGtagEvent';
+import sampleImage from '../../../utils/sample.jpg'
 
 export const BotQuestion = ({ question, image, indices, isLoading, renderCountdown, chooseAnswer }) => {
     return (
-        <div className="bot-question connect-triva">
-            <div className="trival-block">
-                <div className="container quest">
-                    <div className="countern text-center mt-2">
-                        {renderCountdown && renderCountdown()}
-                    </div>
-                    <div className="questions">
-                        <div className="head3 bold-text">
-                            {question.question}
-                        </div>
-                        <p>{question.description}</p>
-                    </div>
-                    {image && (
+        <div className="trival-block">
+            <div className="countern text-center mt-2">
+                {renderCountdown && renderCountdown()}
+            </div>
+            <div className="questions">
+                <div className="head3 bold-text">
+                    {question.question}
+                </div>
+                <p>{question.description}</p>
+            </div>
+            {/* <img src={sampleImage} alt="question" className="drop-shadow img-b" /> */}
+            {image && (
                         <div>
                             <div className="media-c">
                                 <img src={image.src} alt="question" className="drop-shadow img-b" />
+                                
                             </div>
                         </div>
                     )}
-                    <div className="options">
-                        {indices.map(index => (
-                            <button className="btn btnChan text-left"
-                                disabled={isLoading}
-                                onClick={() => chooseAnswer(`option${index}`)}
-                            >
-                                {question[`option${index}`]}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+            <div className="options">
+                {indices.map(index => (
+                    <button className="btn btnChan text-left"
+                        disabled={isLoading}
+                        onClick={() => chooseAnswer(`option${index}`)}
+                    >
+                        {question[`option${index}`]}
+                    </button>
+                ))}
             </div>
         </div>
     )
@@ -72,7 +71,7 @@ class BotTrivia extends Component {
             quizStatus: 'PASSED',
             warning: { status: false, msg: '', type: '' },
             questionsAnswered: 0,
-            questionIndices: [1,2,3,4]
+            questionIndices: [1, 2, 3, 4]
         };
 
         this.updateAnswer = this.updateAnswer.bind(this);
@@ -149,7 +148,8 @@ class BotTrivia extends Component {
 
             await this.setState({
                 quizStatus: 'FAILED'
-            })
+            });
+            // this.props.quizStatusFunc('FAILED');
 
             this.setState({
                 finishQuiz: true,
@@ -197,6 +197,7 @@ class BotTrivia extends Component {
             })
         }
         this.bufferTimerChild.current.start();
+        // this.props.quizStatusFunc('PASSED');
     }
 
     renderCountdown = () => {
@@ -243,18 +244,16 @@ class BotTrivia extends Component {
                                 await this.setState({ bufferCard: false, isLoading: false });
                             }}
                             renderer={props =>
-                                <>
-                                    <div className="head3 bold-text">{this.state.questionsAnswered.toInteger === 0 ? 'The challenge starts in' : 'Next question in'}: <div className="blue-text my-5 bold-text countdown-text">{props.total / 1000}</div></div>
-                                </>
+                                <div className="head3 bold-text">{this.state.questionsAnswered.toInteger === 0 ? 'The challenge starts in' : 'Next question in'}: <div className="blue-text my-5 bold-text countdown-text">{props.total / 1000}</div></div>
                             }
                         />
-                        <PoweredBy />
+
                     </div>
                 )}
                 {!this.state.bufferCard && (
-                    <div className="bot-container container pb-4">
+                    <div >
                         {this.state.currentQuestion && !this.state.finishQuiz && (
-                            <>
+                            <div className='connect-triva'>
                                 <BotQuestion question={this.state.currentQuestion}
                                     image={this.state.image}
                                     indices={this.state.questionIndices}
@@ -262,8 +261,7 @@ class BotTrivia extends Component {
                                     renderCountdown={this.renderCountdown}
                                     chooseAnswer={this.chooseAnswer}
                                 />
-                                <PoweredBy />
-                            </>
+                            </div>
                         )}
                         {!this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'PASSED' && (
                             <EndBotChallenge sendableTransaction={this.state.returnObj} />

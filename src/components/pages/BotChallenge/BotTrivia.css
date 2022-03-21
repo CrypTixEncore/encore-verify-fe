@@ -29,9 +29,11 @@
 }
 
 .trival-block {
-  width: 35%;
-  display: flex;
-  align-items: center;
+  width: 360px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  /* display: flex;
+  align-items: center; */
 }
 
 .main-content {
@@ -56,6 +58,8 @@
 
 .bot-question .media-c {
   max-height:  220px;
+  width: 21rem !important;
+  margin: 0;
 }
 .bot-question .img {
   height:  auto;

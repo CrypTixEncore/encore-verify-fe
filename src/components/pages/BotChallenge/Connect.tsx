@@ -26,7 +26,8 @@ export default function Connect() {
     const [endpoint, setEndpoint] = useState<string>('')
     const [gatekeeperNetwork, setGatekeeperNetwork] = useState<anchor.web3.PublicKey>()
     const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [demo, setDemo] = useState<boolean>(false)
+    const [demo, setDemo] = useState<boolean>(false);
+    // const [trivia, setTrivia] = useState<string>('false');
 
     useEffect(() => {
         const url = new URL(window.location.href);
@@ -48,26 +49,31 @@ export default function Connect() {
         new LedgerWalletAdapter(),
     ], []);
 
+    // const check_trivial_page = (data: any) => {
+    //     setTrivia(data);
+    // }
+
     return (
         <div>
-        <div className="container over-m mt-3">
-            {!isLoading && (
-                <ConnectionProvider endpoint={
-                    gatekeeperNetwork?.toBase58() === 'tibePmPaoTgrs929rWpu755EXaxC7M3SthVCf6GzjZt' ? mainnetRpc : devnetRpc
-                }>
-                    <WalletProvider wallets={wallets}>
-                        <WalletModalProvider>
-                            <>
-                                <WalletMultiButton disabled={isLoading} className="connect-btn mt-3 text-center" />
-                            </>
-                            {gatekeeperNetwork && (
-                                <BotChallenge gatekeeperNetwork={gatekeeperNetwork} demo={demo}/>
-                            )}
-                            <WalletMultiButton disabled={isLoading} className="connect-btn mt-3 text-center" />
-                        </WalletModalProvider>
-                    </WalletProvider>
-                </ConnectionProvider>
-            )}
+            <div className="container over-m mt-3">
+                {!isLoading && (
+                    <ConnectionProvider endpoint={
+                        gatekeeperNetwork?.toBase58() === 'tibePmPaoTgrs929rWpu755EXaxC7M3SthVCf6GzjZt' ? mainnetRpc : devnetRpc
+                    }>
+                        <WalletProvider wallets={wallets}>
+                            <WalletModalProvider>
+                                {gatekeeperNetwork && (
+                                    <BotChallenge
+                                        gatekeeperNetwork={gatekeeperNetwork}
+                                        demo={demo}
+                                        // func={check_trivial_page}
+                                    />
+                                )}
+                                {/* <WalletMultiButton disabled={isLoading} className={`connect-btn mt-3 text-center ${trivia === 'true' ? 'd-none': ''}`} /> */}
+                            </WalletModalProvider>
+                        </WalletProvider>
+                    </ConnectionProvider>
+                )}
             </div>
             <PoweredBy />
         </div>
