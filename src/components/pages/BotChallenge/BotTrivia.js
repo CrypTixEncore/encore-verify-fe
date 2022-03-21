@@ -120,8 +120,6 @@ class BotTrivia extends Component {
                 answer: ans,
                 questionId: key,
             },
-            wallet: this.props.wallet.toBase58(),
-            rpcUrl: this.props.endpoint,
             token: this.state.token,
             gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
         };
@@ -159,22 +157,22 @@ class BotTrivia extends Component {
         }
     }
 
+    shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+
+        return array
+	}
+
     updateQuestion = async (question) => {
         let image = null;
         if (question.questionImage) {
             image = new Image();
-            image.src = question.questionImage
-        }
-
-        const shuffleArray = array => {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                const temp = array[i];
-                array[i] = array[j];
-                array[j] = temp;
-            }
-
-            return array
+            image.src = question.questionImage;
         }
 
         await this.setState(() => ({
@@ -182,7 +180,7 @@ class BotTrivia extends Component {
             bufferCard: true,
             isLoading: false,
             image: image,
-            questionIndices: shuffleArray([1, 2, 3, 4])
+            questionIndices: this.shuffleArray([1, 2, 3, 4])
         }));
 
         this.bufferTimerChild.current.start();
@@ -245,7 +243,7 @@ class BotTrivia extends Component {
                             }}
                             renderer={props =>
                                 <>
-                                    <div className="head3 bold-text">{this.state.questionsAnswered == 0 ? 'The challenge starts in' : 'Next question in'}: <div className="blue-text my-5 bold-text countdown-text">{props.total / 1000}</div></div>
+                                    <div className="head3 bold-text">{this.state.questionsAnswered.toInteger === 0 ? 'The challenge starts in' : 'Next question in'}: <div className="blue-text my-5 bold-text countdown-text">{props.total / 1000}</div></div>
                                 </>
                             }
                         />
@@ -273,7 +271,7 @@ class BotTrivia extends Component {
 
                 )}
                 {!this.state.bufferCard && !this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'FAILED' && (
-                    <BotChallenge endpoint={this.props.endpoint} gatekeeperNetwork={this.props.gatekeeperNetwork} failed={true} />
+                    <BotChallenge gatekeeperNetwork={this.props.gatekeeperNetwork} failed={true} />
                 )}
             </div>
         )

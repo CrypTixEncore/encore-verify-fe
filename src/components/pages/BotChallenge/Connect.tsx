@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './BotChallenge.css';
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { WalletModalProvider, WalletMultiButton } from "@solana/wallet-adapter-react-ui";
@@ -17,9 +17,12 @@ import config from '../../../config';
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
+const devnetRpc = 'https://api.devnet.solana.com';
+const mainnetRpc = 'https://solana-api.projectserum.com';
+
 export default function Connect() {
     //const [warning, setWarning] = useState({ status: false, msg: '', type: '' });
-    const [endpoint, setEndpoint]= useState<string>('')
+    const [endpoint, setEndpoint] = useState<string>('')
     const [gatekeeperNetwork, setGatekeeperNetwork] = useState<anchor.web3.PublicKey>()
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [demo, setDemo] = useState<boolean>(false)
@@ -37,28 +40,30 @@ export default function Connect() {
     }, []);
 
     const wallets = useMemo(() => [
-            new PhantomWalletAdapter(),
-            new SlopeWalletAdapter(),
-            new SolflareWalletAdapter(),
-            new TorusWalletAdapter(),
-            new LedgerWalletAdapter(),
-        ], []);
+        new PhantomWalletAdapter(),
+        new SlopeWalletAdapter(),
+        new SolflareWalletAdapter(),
+        new TorusWalletAdapter(),
+        new LedgerWalletAdapter(),
+    ], []);
 
     return (
         <div className="container over-m">
             {!isLoading && (
-                <ConnectionProvider endpoint={endpoint}>
+                <ConnectionProvider endpoint={
+                    gatekeeperNetwork?.toBase58() === 'tibePmPaoTgrs929rWpu755EXaxC7M3SthVCf6GzjZt' ? mainnetRpc : devnetRpc
+                }>
                     <WalletProvider wallets={wallets}>
                         <WalletModalProvider>
-                            <WalletMultiButton disabled={isLoading} className="connect-btn mt-3 text-center"/>
+                            <>
+                                <WalletMultiButton disabled={isLoading} className="connect-btn mt-3 text-center" />
+                            </>
                             {gatekeeperNetwork && (
-                                <BotChallenge gatekeeperNetwork={gatekeeperNetwork}
-                                              endpoint={endpoint}
-                                              demo={demo}
-                                />
+                                <BotChallenge gatekeeperNetwork={gatekeeperNetwork} demo={demo}/>
                             )}
                         </WalletModalProvider>
                     </WalletProvider>
+
                 </ConnectionProvider>
             )}
         </div>
