@@ -103,8 +103,8 @@ const BotChallenge = (props: {
                                                 </Fragment>
                                             ) : (
                                                 <Fragment>
-                                                    <div className="header-text-c">You failed!</div>
-                                                    <div className="head5">Go ahead and try again.</div>
+                                                    <div className="header-text-c-h">You failed!</div>
+                                                    <div className="c-h-b">Go ahead and try again.</div>
                                                 </Fragment>
                                             )
                                             }
