@@ -115,26 +115,24 @@ class BotTrivia extends Component {
         // let key = this.props.questions[this.state.currentQuestion].questionId;
         let key = this.state.currentQuestion.questionId;
 
-        const payloadData = {
-            answer: {
-                answer: ans,
-                questionId: key,
-            },
-            token: this.state.token,
-            gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
-        };
         try {
-            const returnObj = await axios.post(
-                '/bot-questions/verify-human', payloadData);
+            const returnObj = await axios.post('/bot-questions/verify-human', {
+                answer: {
+                    answer: ans,
+                    questionId: key,
+                },
+                token: this.state.token,
+                gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
+            });
 
-            const decrypted = returnObj.data;
-            if (decrypted["question"]) {
-                this.state.token = decrypted.token;
-                await this.updateQuestion(decrypted.question);
+            const response = returnObj.data;
+            if (response.question) {
+                this.state.token = response.token;
+                await this.updateQuestion(response.question);
             } else {
                 await this.setState(() => ({
                     finishQuiz: true,
-                    returnObj: decrypted,
+                    returnObj: response,
                     isLoading: false,
                     bufferCard: false
                 }))
