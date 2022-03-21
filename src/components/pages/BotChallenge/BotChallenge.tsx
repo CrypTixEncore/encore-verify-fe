@@ -36,20 +36,17 @@ const BotChallenge = (props: {
     const startQuiz = async () => {
         setIsLoading(true)
 
-        const payload = {
-            wallet: wallet.publicKey
-        };
         let questionsObj;
         if (props.demo) {
-            questionsObj = await axios.post(`/bot-questions/demo-quiz`, payload);
+            questionsObj = await axios.post(`/bot-questions/demo-quiz/${wallet.publicKey}`);
         } else {
-            questionsObj = await axios.post(`/bot-questions/create-bot-quiz`, payload);
+            questionsObj = await axios.post(`/bot-questions/create-bot-quiz/${wallet.publicKey}`);
         }
 
-        const encryptedData = questionsObj.data;
+        const response = questionsObj.data;
 
-        setQuestion(encryptedData.question);
-        setToken(encryptedData.token);
+        setQuestion(response.question);
+        setToken(response.token);
 
         setPageState('TRIVIA');
         setIsLoading(false);
