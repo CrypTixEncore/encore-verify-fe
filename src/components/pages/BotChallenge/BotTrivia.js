@@ -141,11 +141,19 @@ class BotTrivia extends Component {
 
         } catch (e) {
             console.error(e)
-            UseGtagEvent('quiz_failed', 'Quiz Failed');
+            if (e.response.data.error.message === 'FAILED_QUIZ') {
+                UseGtagEvent('quiz_failed', 'Quiz Failed');
+                await this.setState({
+                    quizStatus: 'FAILED'
+                });
+            } else {
+                UseGtagEvent('suspicious_activity', 'Suspicious Activity');
+                await this.setState({
+                    quizStatus: 'SUSPICIOUS'
+                });
+            }
 
-            await this.setState({
-                quizStatus: 'FAILED'
-            });
+
             // this.props.quizStatusFunc('FAILED');
 
             this.setState({
@@ -229,45 +237,52 @@ class BotTrivia extends Component {
     render() {
         return (
             <div>
-                {this.state.bufferCard && (
-                    <div className="text-center bot-container pt-5 pb-4">
-                        <Countdown
-                            date={Date.now() + 3 * 1000}
-                            ref={this.bufferTimerChild}
-                            autoStart={false}
-                            intervalDelay={0}
-                            precision={0}
-                            onComplete={async () => {
-                                await this.setState({ bufferCard: false, isLoading: false });
-                            }}
-                            renderer={props =>
-                                <div className="head3 bold-text">{this.state.questionsAnswered.toInteger === 0 ? 'The challenge starts in' : 'Next question in'}: <div className="blue-text my-5 bold-text countdown-text">{props.total / 1000}</div></div>
-                            }
-                        />
-
-                    </div>
-                )}
-                {!this.state.bufferCard && (
-                    <div >
-                        {this.state.currentQuestion && !this.state.finishQuiz && (
-                            <div className='connect-triva'>
-                                <BotQuestion question={this.state.currentQuestion}
-                                    image={this.state.image}
-                                    indices={this.state.questionIndices}
-                                    isLoading={this.state.isLoading}
-                                    renderCountdown={this.renderCountdown}
-                                    chooseAnswer={this.chooseAnswer}
+                {this.state.quizStatus !== 'SUSPICIOUS' && (
+                    <>
+                        {this.state.bufferCard && (
+                            <div className="text-center bot-container pt-5 pb-4">
+                                <Countdown
+                                    date={Date.now() + 3 * 1000}
+                                    ref={this.bufferTimerChild}
+                                    autoStart={false}
+                                    intervalDelay={0}
+                                    precision={0}
+                                    onComplete={async () => {
+                                        await this.setState({ bufferCard: false, isLoading: false });
+                                    }}
+                                    renderer={props =>
+                                        <div className="head3 bold-text">{this.state.questionsAnswered.toInteger === 0 ? 'The challenge starts in' : 'Next question in'}: <div className="blue-text my-5 bold-text countdown-text">{props.total / 1000}</div></div>
+                                    }
                                 />
+
                             </div>
                         )}
-                        {!this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'PASSED' && (
-                            <EndBotChallenge sendableTransaction={this.state.returnObj} />
-                        )}
-                    </div>
+                        {!this.state.bufferCard && (
+                            <div >
+                                {this.state.currentQuestion && !this.state.finishQuiz && (
+                                    <div className='connect-triva'>
+                                        <BotQuestion question={this.state.currentQuestion}
+                                            image={this.state.image}
+                                            indices={this.state.questionIndices}
+                                            isLoading={this.state.isLoading}
+                                            renderCountdown={this.renderCountdown}
+                                            chooseAnswer={this.chooseAnswer}
+                                        />
+                                    </div>
+                                )}
+                                {!this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'PASSED' && (
+                                    <EndBotChallenge sendableTransaction={this.state.returnObj} />
+                                )}
+                            </div>
 
+                        )}
+                        {!this.state.bufferCard && !this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'FAILED' && (
+                            <BotChallenge gatekeeperNetwork={this.props.gatekeeperNetwork} state={'FAILED'} />
+                        )}
+                    </>
                 )}
-                {!this.state.bufferCard && !this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'FAILED' && (
-                    <BotChallenge gatekeeperNetwork={this.props.gatekeeperNetwork} failed={true} />
+                {this.state.quizStatus === 'SUSPICIOUS' && (
+                    <BotChallenge gatekeeperNetwork={this.props.gatekeeperNetwork} state={'SUSPICIOUS'} />
                 )}
             </div>
         )

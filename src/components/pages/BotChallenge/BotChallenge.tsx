@@ -19,6 +19,7 @@ const BotChallenge = (props: {
     gatekeeperNetwork: anchor.web3.PublicKey,
     failed?: boolean,
     demo?: boolean,
+    state?: string
     // func?: any,
 }) => {
     const wallet = useWallet()
@@ -28,25 +29,6 @@ const BotChallenge = (props: {
     const [pageState, setPageState] = useState('LANDING')
     const [question, setQuestion] = useState(null);
     const [token, setToken] = useState("");
-
-    // useEffect(() => {
-    //     if (props.failed) {
-    //         props.func('false');
-    //     }
-    // }, [props]);
-
-    
-
-    
-
-    /*
-    const [showSignInModal, setShowSignInModal] = useState(false);
-
-    const closeModal = (setShow: { (value: React.SetStateAction<boolean>): void; (arg0: boolean): void; }) => {
-        setShow(false)
-    }
-
-     */
 
     const startQuiz = async () => {
         setIsLoading(true)
@@ -95,19 +77,24 @@ const BotChallenge = (props: {
                                 <div className="">
                                     <div className="connect-triva">
                                         <div className="left-col">
-                                            {!props.failed ? (
-                                                <Fragment>
+                                            {!props.state && (
+                                                <>
                                                     <div className="header-text-c-h">Prove you’re not a bot.</div>
                                                     <div className="c-h-b">Answer 3 questions. You will have 15 seconds for each question.</div>
                                                     <div className="c-h-b mt-4">Once you pass the challenge you can claim a token which will allow you to mint.</div>
-                                                </Fragment>
-                                            ) : (
-                                                <Fragment>
+                                                </>
+                                            )}
+                                            {props.state === 'FAILED' && (
+                                                <>
                                                     <div className="header-text-c-h">You failed!</div>
                                                     <div className="c-h-b">Go ahead and try again.</div>
-                                                </Fragment>
-                                            )
-                                            }
+                                                </>
+                                            )}
+                                            {props.state === 'SUSPICIOUS' && (
+                                                <>
+                                                    <div className="header-text-c-h">Suspicious activity detected</div>
+                                                </>
+                                            )}
 
                                             <button className="btn d-btn"
                                                 disabled={warning.status}
