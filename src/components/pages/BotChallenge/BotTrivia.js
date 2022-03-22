@@ -30,7 +30,7 @@ export const BotQuestion = ({ question, image, indices, isLoading, renderCountdo
                         <div>
                             <div className="media-c">
                                 <img src={image.src} alt="question" className="drop-shadow img-b" />
-                                
+
                             </div>
                         </div>
                     )}
@@ -114,27 +114,24 @@ class BotTrivia extends Component {
         // let key = this.props.questions[this.state.currentQuestion].questionId;
         let key = this.state.currentQuestion.questionId;
 
-        const payloadData = {
-            answer: {
-                answer: ans,
-                questionId: key,
-            },
-            wallet: this.props.wallet.toBase58(),
-            token: this.state.token,
-            gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
-        };
         try {
-            const returnObj = await axios.post(
-                '/bot-questions/verify-human', payloadData);
+            const returnObj = await axios.post('/bot-questions/verify-human', {
+                answer: {
+                    answer: ans,
+                    questionId: key,
+                },
+                token: this.state.token,
+                gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
+            });
 
-            const decrypted = returnObj.data;
-            if (decrypted["question"]) {
-                this.state.token = decrypted.token;
-                await this.updateQuestion(decrypted.question);
+            const response = returnObj.data;
+            if (response.question) {
+                this.state.token = response.token;
+                await this.updateQuestion(response.question);
             } else {
                 await this.setState(() => ({
                     finishQuiz: true,
-                    returnObj: decrypted,
+                    returnObj: response,
                     isLoading: false,
                     bufferCard: false
                 }))
@@ -158,22 +155,22 @@ class BotTrivia extends Component {
         }
     }
 
+    shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+
+        return array
+	}
+
     updateQuestion = async (question) => {
         let image = null;
         if (question.questionImage) {
             image = new Image();
-            image.src = question.questionImage
-        }
-
-        const shuffleArray = array => {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                const temp = array[i];
-                array[i] = array[j];
-                array[j] = temp;
-            }
-
-            return array
+            image.src = question.questionImage;
         }
 
         await this.setState(() => ({
@@ -181,7 +178,7 @@ class BotTrivia extends Component {
             bufferCard: true,
             isLoading: false,
             image: image,
-            questionIndices: shuffleArray([1, 2, 3, 4])
+            questionIndices: this.shuffleArray([1, 2, 3, 4])
         }));
 
         this.bufferTimerChild.current.start();
