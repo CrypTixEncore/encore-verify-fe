@@ -53,15 +53,15 @@ const BotChallenge = (props: {
 
         let questionsObj;
         if (props.demo) {
-            questionsObj = await axios.get(`/bot-questions/demo-quiz`)
+            questionsObj = await axios.post(`/bot-questions/demo-quiz/${wallet.publicKey}`);
         } else {
-            questionsObj = await axios.get(`/bot-questions/create-bot-quiz`)
+            questionsObj = await axios.post(`/bot-questions/create-bot-quiz/${wallet.publicKey}`);
         }
 
-        const encryptedData = questionsObj.data;
+        const response = questionsObj.data;
 
-        setQuestion(encryptedData.question);
-        setToken(encryptedData.token)
+        setQuestion(response.question);
+        setToken(response.token);
 
         setPageState('TRIVIA');
         // props?.func('true')
