@@ -76,7 +76,7 @@ const BotChallenge = (props: {
                 <div className="header-text-c-h">Prove you’re not a bot.</div>
                 <div className="c-h-b">Answer 3 questions. You will have 15 seconds for each question.</div>
                 <div className="c-h-b mt-4">Once you pass the challenge you can claim a token which will allow you to mint.</div>
-                <button className="btn d-btn"
+                <button className="btn dd-btn"
                     disabled
                 >
                     Start Challenge

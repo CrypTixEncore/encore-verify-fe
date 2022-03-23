@@ -11,7 +11,7 @@ import BotChallenge from './BotChallenge'
 import security from '../../../settings/security';
 import config from '../../../config';
 import UseGtagEvent from '../../hooks/useGtagEvent';
-import sampleImage from '../../../utils/sample.jpg'
+import sampleImage from '../../../utils/Refrigerator.jpg'
 
 export const BotQuestion = ({ question, image, indices, isLoading, renderCountdown, chooseAnswer }) => {
     return (
@@ -25,15 +25,15 @@ export const BotQuestion = ({ question, image, indices, isLoading, renderCountdo
                 </div>
                 <p>{question.description}</p>
             </div>
-            {/* <img src={sampleImage} alt="question" className="drop-shadow img-b" /> */}
+            {/* <div className="media-c">
+                <img src={sampleImage} alt="question" className="drop-shadow" style={{ width: '22rem', height: '300px', objectFit: 'scale-down' }} />
+            </div> */}
+
             {image && (
-                        <div>
-                            <div className="media-c">
-                                <img src={image.src} alt="question" className="drop-shadow img-b" />
-                                
-                            </div>
-                        </div>
-                    )}
+                <div className="media-c">
+                    <img src={image.src} alt="question" className="drop-shadow" style={{ width: '21rem', height: '300px', objectFit: 'scale-down' }} />
+                </div>
+            )}
             <div className="options">
                 {indices.map(index => (
                     <button className="btn btnChan text-left"
