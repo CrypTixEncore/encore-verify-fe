@@ -11,7 +11,6 @@ import BotChallenge from './BotChallenge'
 import security from '../../../settings/security';
 import config from '../../../config';
 import UseGtagEvent from '../../hooks/useGtagEvent';
-import sampleImage from '../../../utils/sample.jpg'
 
 export const BotQuestion = ({ question, image, indices, isLoading, renderCountdown, chooseAnswer }) => {
     return (
@@ -25,15 +24,11 @@ export const BotQuestion = ({ question, image, indices, isLoading, renderCountdo
                 </div>
                 <p>{question.description}</p>
             </div>
-            {/* <img src={sampleImage} alt="question" className="drop-shadow img-b" /> */}
             {image && (
-                        <div>
-                            <div className="media-c">
-                                <img src={image.src} alt="question" className="drop-shadow img-b" />
-
-                            </div>
-                        </div>
-                    )}
+                <div className="media-c">
+                    <img src={image.src} alt="question" className="drop-shadow" style={{ width: '21rem', height: '300px', objectFit: 'scale-down' }} />
+                </div>
+            )}
             <div className="options">
                 {indices.map(index => (
                     <button className="btn btnChan text-left"
@@ -114,6 +109,15 @@ class BotTrivia extends Component {
         // let key = this.props.questions[this.state.currentQuestion].questionId;
         let key = this.state.currentQuestion.questionId;
 
+        const payloadData = {
+            answer: {
+                answer: ans,
+                questionId: key,
+            },
+            wallet: this.props.wallet.toBase58(),
+            token: this.state.token,
+            gatekeeperNetwork: this.props.gatekeeperNetwork.toBase58()
+        };
         try {
             const returnObj = await axios.post('/bot-questions/verify-human', {
                 answer: {
@@ -172,7 +176,7 @@ class BotTrivia extends Component {
         }
 
         return array
-	}
+    }
 
     updateQuestion = async (question) => {
         let image = null;
@@ -277,7 +281,7 @@ class BotTrivia extends Component {
 
                         )}
                         {!this.state.bufferCard && !this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'FAILED' && (
-                            <BotChallenge gatekeeperNetwork={this.props.gatekeeperNetwork} state={'FAILED'} />
+                            <BotChallenge gatekeeperNetwork={this.props.gatekeeperNetwork} failed={true} />
                         )}
                     </>
                 )}
