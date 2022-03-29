@@ -17,10 +17,8 @@ require('@solana/wallet-adapter-react-ui/styles.css');
 
 const BotChallenge = (props: {
     gatekeeperNetwork: anchor.web3.PublicKey,
-    failed?: boolean,
     demo?: boolean,
     state?: string
-    // func?: any,
 }) => {
     const wallet = useWallet()
 
@@ -101,8 +99,8 @@ const BotChallenge = (props: {
                                                 onClick={startQuiz}
                                             >
                                                 Start Challenge
-                                        </button>
-                                        <WalletMultiButton disabled={isLoading} className= 'connect-btn mt-2 text-center' />
+                                            </button>
+                                            <WalletMultiButton disabled={isLoading} className= 'connect-btn mt-2 text-center' />
                                         </div>
                                     </div>
                                 </div>

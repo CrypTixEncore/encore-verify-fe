@@ -281,7 +281,7 @@ class BotTrivia extends Component {
 
                         )}
                         {!this.state.bufferCard && !this.state.isLoading && this.state.finishQuiz && this.state.quizStatus === 'FAILED' && (
-                            <BotChallenge gatekeeperNetwork={this.props.gatekeeperNetwork} failed={true} />
+                            <BotChallenge gatekeeperNetwork={this.props.gatekeeperNetwork} state={'FAILED'} />
                         )}
                     </>
                 )}

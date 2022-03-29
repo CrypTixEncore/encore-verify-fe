@@ -22,8 +22,6 @@ const devnetRpc = 'https://api.devnet.solana.com';
 const mainnetRpc = 'https://solana-api.projectserum.com';
 
 export default function Connect() {
-    //const [warning, setWarning] = useState({ status: false, msg: '', type: '' });
-    const [endpoint, setEndpoint] = useState<string>('')
     const [gatekeeperNetwork, setGatekeeperNetwork] = useState<anchor.web3.PublicKey>()
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [demo, setDemo] = useState<boolean>(false);
@@ -31,8 +29,6 @@ export default function Connect() {
 
     useEffect(() => {
         const url = new URL(window.location.href);
-
-        setEndpoint(url.searchParams.get('endpoint')!)
 
         setGatekeeperNetwork(new anchor.web3.PublicKey(url.searchParams.get('gkNetwork')!))
 
